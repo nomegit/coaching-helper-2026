@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Protect the Box — Tactical Coaching Board</title>
+<style>
+/* ── RESET & BASE ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --press: #f59e0b; --cover: #a78bfa; --aux: #22d3ee;
+  --cb: #60a5fa;    --mid: #34d399;   --cf: #fb923c;
+  --gk: #fde68a;    --atk: #f87171;
+  --bg: #05080a;    --surf: #0c1014;  --border: #1a2535;
+  --text: #f0f5fa;  --muted: #8892a4; --dim: #4a5568;
+  --s1: #22c55e; --s2: #f59e0b; --s3: #ef4444;
+}
+html { font-size: 16px; }
+body {
+  font-family: 'Trebuchet MS', Georgia, serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 48px;
+  -webkit-font-smoothing: antialiased;
+}
+button { cursor: pointer; font-family: inherit; }
+
+/* ── HEADER ────────────────────────────────────────────────── */
+.header {
+  background: linear-gradient(160deg, #0a1a0b 0%, #05080a 100%);
+  border-bottom: 2px solid rgba(20,83,45,0.21);
+  padding: 22px 16px 14px;
+  text-align: center;
+}
+.header-eyebrow {
+  font-size: 9px; letter-spacing: 6px; color: #4ade80;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.header h1 { font-size: 24px; font-weight: bold; color: #fff; letter-spacing: 0.5px; }
+.header p  { font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+/* ── INTRO CARD ─────────────────────────────────────────────── */
+#intro-card {
+  margin: 12px 12px 0;
+  padding: 13px 38px 13px 15px;
+  border-radius: 10px;
+  background: #0d1f0f;
+  border: 1px solid rgba(34,197,94,0.17);
+  position: relative;
+}
+#intro-card.hidden { display: none; }
+.intro-close {
+  position: absolute; top: 8px; right: 10px;
+  background: none; border: none;
+  color: var(--dim); font-size: 17px; line-height: 1; padding: 2px;
+}
+.intro-title {
+  font-size: 10px; font-weight: bold; color: #4ade80;
+  letter-spacing: 3px; text-transform: uppercase; margin-bottom: 7px;
+}
+.intro-body { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.intro-body strong { color: #c8d6e8; font-weight: bold; }
+
+/* ── MAIN CONTAINER ─────────────────────────────────────────── */
+.main { max-width: 640px; margin: 0 auto; padding: 13px 12px 0; }
+
+/* ── FORMATION TABS ─────────────────────────────────────────── */
+.fm-tabs {
+  padding: 13px 10px 0;
+  display: flex; gap: 7px;
+  justify-content: center; flex-wrap: wrap;
+}
+.fm-tab {
+  padding: 8px 15px; border-radius: 22px;
+  border: 2px solid var(--border);
+  background: var(--surf);
+  color: var(--dim);
+  font-size: 12px;
+  transition: all 0.2s;
+  text-align: center;
+}
+.fm-tab.active {
+  font-weight: bold;
+}
+.fm-tab .tab-name { font-weight: bold; }
+.fm-tab .tab-fmt  { font-size: 10px; opacity: 0.8; }
+
+/* ── FORMATION NOTE ─────────────────────────────────────────── */
+.fm-note {
+  text-align: center; font-size: 11px; color: #374151;
+  letter-spacing: 1px; margin-bottom: 12px; font-style: italic;
+}
+
+/* ── STAGE BUTTONS ──────────────────────────────────────────── */
+.stage-row { display: flex; gap: 5px; margin-bottom: 10px; }
+.stage-btn {
+  flex: 1; padding: 10px 4px; border-radius: 8px;
+  border: 2px solid var(--border);
+  background: var(--surf);
+  text-align: center; transition: all 0.2s;
+}
+.stage-btn .s-tag {
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 2px;
+}
+.stage-btn .s-title { font-size: 12px; font-weight: bold; color: var(--dim); }
+.stage-btn .s-sub   { font-size: 9px; margin-top: 2px; color: #1e293b; }
+
+/* ── STAGE DESC ─────────────────────────────────────────────── */
+.stage-desc {
+  padding: 9px 13px; border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 9px;
+}
+.stage-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.stage-desc .s-label {
+  font-size: 10px; font-weight: bold;
+  letter-spacing: 1.5px; text-transform: uppercase; margin-right: 7px;
+}
+.stage-desc .s-text { font-size: 12px; color: var(--muted); }
+
+/* ── PITCH SVG ──────────────────────────────────────────────── */
+.pitch-wrap { position: relative; width: 100%; }
+.pitch-wrap svg {
+  width: 100%; display: block;
+  border-radius: 12px; overflow: hidden;
+}
+.pitch-wrap svg .player-group {
+  transition: transform 0.75s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── LEGEND ─────────────────────────────────────────────────── */
+.legend {
+  display: flex; flex-wrap: wrap;
+  gap: 5px 14px; padding: 9px 0 5px;
+  justify-content: center;
+}
+.legend-item {
+  display: flex; align-items: center;
+  gap: 5px; font-size: 11px; color: var(--dim);
+}
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%; flex-shrink: 0;
+}
+
+/* ── 231 EXPLAINER ──────────────────────────────────────────── */
+.explainer-231 {
+  margin: 10px 0 0; padding: 12px 14px; border-radius: 9px;
+  font-size: 12px; color: var(--muted); line-height: 1.72;
+}
+.explainer-231.hidden { display: none; }
+.explainer-231 strong { color: #22d3ee; }
+
+/* ── ROLE PILLS ─────────────────────────────────────────────── */
+.role-pills {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 7px; margin: 14px 0 0;
+}
+.role-pills.hidden { display: none; }
+.role-pill {
+  padding: 8px 10px; border-radius: 8px; text-align: center;
+}
+.role-pill .pill-label { font-size: 11px; font-weight: bold; line-height: 1.3; }
+.role-pill .pill-sub   { font-size: 9px; color: var(--dim); margin-top: 3px; }
+
+/* ── ROLE TABS ──────────────────────────────────────────────── */
+.role-tabs { display: flex; gap: 5px; margin: 14px 0 9px; }
+.role-tab {
+  flex: 1; padding: 10px 4px; border-radius: 8px;
+  border: 2px solid var(--border);
+  background: var(--surf);
+  color: var(--dim);
+  font-size: 12px; transition: all 0.2s;
+}
+.role-tab.active { font-weight: bold; }
+
+/* ── CONTENT PANEL ──────────────────────────────────────────── */
+.content-panel {
+  padding: 16px; border-radius: 10px;
+  min-height: 170px;
+}
+.panel-title {
+  font-size: 13px; font-weight: bold;
+  margin-bottom: 13px; line-height: 1.45;
+}
+.panel-items { display: flex; flex-direction: column; gap: 9px; }
+.panel-item  { display: flex; gap: 10px; align-items: flex-start; }
+.item-num {
+  width: 21px; height: 21px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: bold; flex-shrink: 0; margin-top: 1px;
+}
+.item-text { font-size: 13px; color: #c8d6e8; line-height: 1.68; }
+.panel-cue {
+  margin-top: 8px; padding: 10px 13px; border-radius: 8px;
+  font-size: 12px; color: #e2eaf5; font-style: italic; line-height: 1.55;
+}
+
+/* ── QUICK REF ──────────────────────────────────────────────── */
+.quick-ref {
+  margin-top: 20px; padding: 15px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--surf);
+}
+.quick-ref-title {
+  font-size: 9px; letter-spacing: 4px; color: #2d3748;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.qr-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.qr-card { padding: 11px 9px; border-radius: 8px; }
+.qr-stage-title {
+  font-size: 9px; font-weight: bold;
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px;
+}
+.qr-role-label {
+  font-size: 8.5px; letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 2px;
+}
+.qr-cue {
+  font-size: 10px; color: var(--dim); font-style: italic;
+  line-height: 1.5; padding-left: 6px;
+  margin-bottom: 5px;
+}
+
+/* ── FOOTER ─────────────────────────────────────────────────── */
+.footer {
+  margin-top: 20px; text-align: center;
+  font-size: 11px; color: #2d3748;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .header h1 { font-size: 20px; }
+  .stage-btn .s-title { font-size: 11px; }
+  .qr-grid { grid-template-columns: 1fr; gap: 6px; }
+  .role-pills { grid-template-columns: 1fr 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-eyebrow">Tactical Coaching Board</div>
+  <h1>Protect the Box</h1>
+  <p>Compact Block &nbsp;·&nbsp; 3 Defensive Stages &nbsp;·&nbsp; Backline · Midfield · Forward Roles</p>
+</div>
+
+<!-- INTRO CARD -->
+<div id="intro-card">
+  <button class="intro-close" onclick="dismissIntro()">✕</button>
+  <div class="intro-title">How to Use</div>
+  <div class="intro-body">
+    <strong>1.</strong> Pick your team &amp; formation below.<br>
+    <strong>2.</strong> Step through the 3 stages to see how the whole team shifts on the animated pitch.<br>
+    <strong>3.</strong> Tap <strong>Backline / Midfield / Forward</strong> to read each player group's specific job.<br>
+    <strong>4.</strong> Share this page with players — works on any phone or computer.
+  </div>
+</div>
+
+<!-- FORMATION TABS -->
+<div class="fm-tabs" id="fm-tabs"></div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="fm-note" id="fm-note"></div>
+
+  <!-- STAGE BUTTONS -->
+  <div class="stage-row" id="stage-row"></div>
+
+  <!-- STAGE DESCRIPTION -->
+  <div class="stage-desc" id="stage-desc"></div>
+
+  <!-- PITCH -->
+  <div class="pitch-wrap">
+    <svg id="pitch-svg" viewBox="0 0 100 138"></svg>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend" id="legend"></div>
+
+  <!-- 231 EXPLAINER -->
+  <div class="explainer-231 hidden" id="explainer-231"></div>
+
+  <!-- ROLE PILLS -->
+  <div class="role-pills hidden" id="role-pills"></div>
+
+  <!-- ROLE TABS -->
+  <div class="role-tabs" id="role-tabs"></div>
+
+  <!-- CONTENT PANEL -->
+  <div class="content-panel" id="content-panel"></div>
+
+  <!-- QUICK REF -->
+  <div class="quick-ref">
+    <div class="quick-ref-title" id="qr-title"></div>
+    <div class="qr-grid" id="qr-grid"></div>
+  </div>
+
+  <div class="footer">Step through each stage &nbsp;·&nbsp; Switch formations &nbsp;·&nbsp; Share with your team</div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════════════════ */
+const T = {
+  press:"#f59e0b", cover:"#a78bfa", aux:"#22d3ee",
+  cb:"#60a5fa",    mid:"#34d399",   cf:"#fb923c",
+  gk:"#fde68a",    atk:"#f87171",
+};
+
+const STAGES = [
+  { id:0, tag:"Stage 1", title:"Hold Shape",       sub:"Ball in Opponent's Half", col:"#22c55e",
+    desc:"Sit in a compact block. Don't chase. Conserve energy. Wait for the press trigger." },
+  { id:1, tag:"Stage 2", title:"Compress & Press", sub:"Ball Enters Defending Half", col:"#f59e0b",
+    desc:"Activate your roles. Drop as a unit. Press/Pressure fires on the ball carrier." },
+  { id:2, tag:"Stage 3", title:"Lock the Box",     sub:"Ball Near Penalty Area", col:"#ef4444",
+    desc:"Pack the box. Block runners. Cut the cutback lane. Hold your feet." },
+];
+
+const FM = {
+  u14_331: { name:"U14 Boys",  fmt:"8v8  ·  3-3-1", col:"#3b82f6", acc:"#93c5fd",
+    note:"3 flat CBs · 3 mids (L/C/R) · 1 CF" },
+  u17_231: { name:"U17 Co-Ed", fmt:"7v7  ·  2-3-1", col:"#f97316", acc:"#fdba74",
+    note:"2 CBs + Holding Mid screen · 2 wide mids · 1 CF" },
+  u17_321: { name:"U17 Co-Ed", fmt:"7v7  ·  3-2-1", col:"#a855f7", acc:"#d8b4fe",
+    note:"3 flat CBs · 2 central mids · 1 CF" },
+};
+
+const POS = {
+  u14_331:[
+    { def:[
+        {id:"lcb",x:22,y:80,r:"cb",  n:"CB"},
+        {id:"ccb",x:50,y:77,r:"cb",  n:"CB"},
+        {id:"rcb",x:78,y:80,r:"cb",  n:"CB"},
+        {id:"lm", x:18,y:59,r:"mid", n:"LM"},
+        {id:"cm", x:50,y:56,r:"mid", n:"CM"},
+        {id:"rm", x:82,y:59,r:"mid", n:"RM"},
+        {id:"cf", x:50,y:24,r:"cf",  n:"CF"},
+      ],
+      atk:[{x:44,y:10,n:"9"},{x:68,y:7,n:"10"},{x:26,y:9,n:"7",b:true}],
+      ball:{x:26,y:9},
+    },
+    { def:[
+        {id:"lcb",x:22,y:87,r:"press",n:"CB"},
+        {id:"ccb",x:50,y:89,r:"cover",n:"CB"},
+        {id:"rcb",x:78,y:87,r:"aux",  n:"CB"},
+        {id:"lm", x:18,y:69,r:"mid",  n:"LM"},
+        {id:"cm", x:50,y:66,r:"mid",  n:"CM"},
+        {id:"rm", x:80,y:69,r:"mid",  n:"RM"},
+        {id:"cf", x:50,y:39,r:"cf",   n:"CF"},
+      ],
+      atk:[{x:10,y:54,n:"7",b:true},{x:36,y:51,n:"9"},{x:62,y:47,n:"10"}],
+      ball:{x:10,y:54},
+    },
+    { def:[
+        {id:"lcb",x:26,y:96,r:"press",n:"CB"},
+        {id:"ccb",x:50,y:97,r:"cover",n:"CB"},
+        {id:"rcb",x:74,y:96,r:"aux",  n:"CB"},
+        {id:"lm", x:20,y:83,r:"mid",  n:"LM"},
+        {id:"cm", x:48,y:82,r:"mid",  n:"CM"},
+        {id:"rm", x:76,y:83,r:"mid",  n:"RM"},
+        {id:"cf", x:50,y:62,r:"cf",   n:"CF"},
+      ],
+      atk:[{x:9,y:87,n:"7",b:true},{x:36,y:91,n:"9"},{x:60,y:85,n:"10"}],
+      ball:{x:9,y:87},
+    },
+  ],
+  u17_231:[
+    { def:[
+        {id:"lcb",x:30,y:80,r:"cb",  n:"CB"},
+        {id:"rcb",x:70,y:80,r:"cb",  n:"CB"},
+        {id:"dm", x:50,y:68,r:"mid", n:"DM", dm:true},
+        {id:"lm", x:16,y:57,r:"mid", n:"LM"},
+        {id:"rm", x:84,y:57,r:"mid", n:"RM"},
+        {id:"cf", x:50,y:24,r:"cf",  n:"CF"},
+      ],
+      atk:[{x:44,y:10,n:"9"},{x:68,y:7,n:"10"},{x:24,y:9,n:"7",b:true}],
+      ball:{x:24,y:9},
+    },
+    { def:[
+        {id:"lcb",x:22,y:87,r:"press",n:"CB"},
+        {id:"dm", x:50,y:88,r:"cover",n:"DM", dm:true, drop:true},
+        {id:"rcb",x:78,y:87,r:"aux",  n:"CB"},
+        {id:"lm", x:14,y:69,r:"mid",  n:"LM"},
+        {id:"rm", x:86,y:69,r:"mid",  n:"RM"},
+        {id:"cf", x:50,y:39,r:"cf",   n:"CF"},
+      ],
+      atk:[{x:10,y:54,n:"7",b:true},{x:35,y:51,n:"9"},{x:62,y:47,n:"10"}],
+      ball:{x:10,y:54},
+    },
+    { def:[
+        {id:"lcb",x:25,y:97,r:"press",n:"CB"},
+        {id:"dm", x:50,y:98,r:"cover",n:"DM", dm:true, drop:true},
+        {id:"rcb",x:75,y:97,r:"aux",  n:"CB"},
+        {id:"lm", x:18,y:84,r:"mid",  n:"LM"},
+        {id:"rm", x:82,y:84,r:"mid",  n:"RM"},
+        {id:"cf", x:50,y:62,r:"cf",   n:"CF"},
+      ],
+      atk:[{x:8,y:88,n:"7",b:true},{x:38,y:91,n:"9"},{x:62,y:86,n:"10"}],
+      ball:{x:8,y:88},
+    },
+  ],
+  u17_321:[
+    { def:[
+        {id:"lcb",x:22,y:80,r:"cb",  n:"CB"},
+        {id:"ccb",x:50,y:77,r:"cb",  n:"CB"},
+        {id:"rcb",x:78,y:80,r:"cb",  n:"CB"},
+        {id:"lm", x:32,y:61,r:"mid", n:"LM"},
+        {id:"rm", x:68,y:61,r:"mid", n:"RM"},
+        {id:"cf", x:50,y:24,r:"cf",  n:"CF"},
+      ],
+      atk:[{x:44,y:10,n:"9"},{x:68,y:7,n:"10"},{x:24,y:9,n:"7",b:true}],
+      ball:{x:24,y:9},
+    },
+    { def:[
+        {id:"lcb",x:22,y:87,r:"press",n:"CB"},
+        {id:"ccb",x:50,y:89,r:"cover",n:"CB"},
+        {id:"rcb",x:78,y:87,r:"aux",  n:"CB"},
+        {id:"lm", x:28,y:71,r:"mid",  n:"LM"},
+        {id:"rm", x:72,y:71,r:"mid",  n:"RM"},
+        {id:"cf", x:50,y:39,r:"cf",   n:"CF"},
+      ],
+      atk:[{x:10,y:54,n:"7",b:true},{x:35,y:51,n:"9"},{x:62,y:47,n:"10"}],
+      ball:{x:10,y:54},
+    },
+    { def:[
+        {id:"lcb",x:26,y:97,r:"press",n:"CB"},
+        {id:"ccb",x:50,y:98,r:"cover",n:"CB"},
+        {id:"rcb",x:74,y:97,r:"aux",  n:"CB"},
+        {id:"lm", x:26,y:82,r:"mid",  n:"LM"},
+        {id:"rm", x:74,y:82,r:"mid",  n:"RM"},
+        {id:"cf", x:50,y:62,r:"cf",   n:"CF"},
+      ],
+      atk:[{x:8,y:87,n:"7",b:true},{x:38,y:91,n:"9"},{x:62,y:86,n:"10"}],
+      ball:{x:8,y:87},
+    },
+  ],
+};
+
+const C = {
+  u14_331:[
+    {
+      back:{
+        title:"Hold a flat defensive line — nobody steps up",
+        pts:[
+          "Keep a flat line ~10 yards above the penalty area. Don't chase runners forward.",
+          "Call your marks out loud: 'I've got #9!' so every teammate knows who has who.",
+          "If one CB steps, the other two must shift together — always move as a connected unit.",
+          "Watch diagonal runs early — identify them before the attacker arrives in your zone.",
+        ],
+      },
+      mid:{
+        title:"Fill the space between the lines — deny passes through your block",
+        pts:[
+          "Stand in the space between the back line and halfway — this is the most dangerous corridor, so occupy it.",
+          "Don't chase the ball individually — hold your shape and let attackers play into it.",
+          "Wide mids: track your winger but stay connected to the central mid at all times.",
+          "Screen the back line — intercept passes before they reach the CBs.",
+        ],
+        cue:"\"Hold your shape! Find your space! Don't chase the ball!\"",
+      },
+      fwd:{
+        title:"You are the team's first defender — press smart, not hard",
+        pts:[
+          "Use your body angle to block the central passing lane — force play wide or long from the top.",
+          "Move with the ball laterally — if it goes right, your press angle shifts to cover the left-central option.",
+          "A half-pace press in the right direction beats a full sprint in the wrong direction every time.",
+          "When the ball is far away, rest and scan — save your legs for when the trigger fires.",
+          "Think of yourself as shaping where the whole attack goes, not just chasing one player.",
+        ],
+        cue:"\"Channel them! Smart press — use your angle, not your speed!\"",
+      },
+    },
+    {
+      back:{
+        title:"Activate your roles — structure is everything now",
+        pts:[
+          "Press/Pressure (Closest Man): your approach angle must cut the forward pass BEFORE you fully engage.",
+          "Cover (Second Man): drop 45° behind the press — your shadow cuts the most dangerous pass lane.",
+          "Auxiliary Cover (Third Man): shift centrally, track crossover runs, call 'switch!' loud and early.",
+          "All three: stay goal-side and ball-side — never let an attacker step between you and your goal.",
+        ],
+      },
+      mid:{
+        title:"Drop as a unit — cut every passing lane through the middle",
+        pts:[
+          "All three mids drop 5–8 yards toward the back line the moment the ball crosses halfway.",
+          "Near-side mid: tuck inside and behind the Auxiliary Cover defender — you double the coverage.",
+          "Far-side mid: hold slightly higher — you are the only outlet if we win the ball quickly.",
+          "Central mid: stand in the diagonal passing lane to the attacking striker — block it with your position.",
+          "Nobody chases the ball wide — hold your structure and let play come into it.",
+        ],
+        cue:"\"Drop! Near side tuck in! Far side hold! Cut the diagonal lane!\"",
+      },
+      fwd:{
+        title:"Drop to the 'gate' — block the easy escape pass",
+        pts:[
+          "Drop toward the halfway line — you become the 'gate' that cuts off backward and square passes.",
+          "Position centrally between the ball and the opponent's midfielders.",
+          "Your presence forces the carrier to go sideways (slower) or play long (easier to defend).",
+          "Stay central — drifting wide opens a lane straight through the middle of our block.",
+          "Stay alert: the moment we win it, you must be ready to receive the outlet pass immediately.",
+        ],
+        cue:"\"Drop to the gate! Stay central! Cut the back pass!\"",
+      },
+    },
+    {
+      back:{
+        title:"Locked box — compress, delay, stay on your feet",
+        pts:[
+          "Squeeze together — no more than 4–5 yards between each defender. No gaps.",
+          "Stay on your feet — delay and block, never dive in recklessly inside your own box.",
+          "Force everything wide — nothing goes through the center channel of the goal.",
+          "On a cross: hold the line and attack the ball as a unit — GK calls 'mine!' or 'away!'",
+        ],
+      },
+      mid:{
+        title:"Pack the box edge — mark runners, block the cutback",
+        pts:[
+          "Both wide mids tuck to the edge of the penalty area as the ball approaches.",
+          "Central mid: get into the cutback lane — the ball pulled back across goal is the highest-danger ball.",
+          "One mid stays at the top of the box to win the clearance and immediately re-establish pressure.",
+          "Track any attacker making a late run into the box — nobody arrives unmarked.",
+        ],
+        cue:"\"Box edge! Cutback lane! Top of box — second ball!\"",
+      },
+      fwd:{
+        title:"Hold the top of the defensive third — be ready for the transition",
+        pts:[
+          "Stay 30–35 yards from goal, central — you are NOT defending inside the box. Stay out.",
+          "Your role is the transition: the moment we win the ball, you must already be moving.",
+          "Keep scanning behind you over your shoulder — anticipate the long clearance over the top.",
+          "If the ball is at the side of our box, stay central (don't drift to that side).",
+          "A CF who stands still in Stage 3 kills the counter-attack — constant movement, constant readiness.",
+        ],
+        cue:"\"Top of the third! Stay central! Scan! Be ready to go on the clearance!\"",
+      },
+    },
+  ],
+  u17_231:[
+    {
+      back:{
+        title:"2+1 passive block — CBs hold, Holding Mid screens",
+        pts:[
+          "Two CBs hold a flat line ~10–12 yards above the penalty area — do not step forward.",
+          "The Holding Mid (DM) sits ~10 yards in front as a floating screen — NOT yet committed to the back line.",
+          "CBs: do not press out of your line. Let the DM handle anything that arrives in front of you.",
+          "Communicate constantly: 'runner right!' so diagonal threats are tracked early.",
+        ],
+      },
+      mid:{
+        title:"Wide mids hold shape — channel the ball inside",
+        pts:[
+          "Wide mids hold their width but stay connected to the DM's central position at all times.",
+          "If the ball goes wide on your side, close at half-pace — never sprint and leave a gap behind you.",
+          "Your job: funnel play toward the center where the DM can screen or intercept.",
+          "The central corridor must never be left unoccupied — it is the most dangerous space on the pitch.",
+        ],
+        cue:"\"Hold wide! Channel inside! Never open the central lane!\"",
+      },
+      fwd:{
+        title:"In the 2-3-1, the CF carries the entire team's first line of defense",
+        pts:[
+          "Your press angle must remove the central pass option — force the ball wide every single time.",
+          "Move with the ball laterally — as it shifts right, your shadow covers the left-central lane.",
+          "Don't chase the carrier; position. A well-angled stationary press beats a wasted sprint.",
+          "Watch the GK — if they play a long ball, you are the first to react and compete.",
+          "Energy management matters: press smart in Stage 1 so you have fuel for Stages 2 and 3.",
+        ],
+        cue:"\"Cut the central lane! Position, don't chase! Move with the ball!\"",
+      },
+    },
+    {
+      back:{
+        title:"DM drops — this is the defining moment of the 2-3-1 system",
+        pts:[
+          "DM drops between the two CBs to form a temporary 3-man back line — commit fully, no hesitation.",
+          "Left CB → Press/Pressure (Closest Man): cut the forward pass with your approach angle, then engage.",
+          "DM → Cover (Second Man): you are now the central cover shadow — cut the most dangerous pass.",
+          "Right CB → Auxiliary Cover (Third Man): track crossover runs, call 'switch!' clearly and loudly.",
+          "The two wide mids must now cover all midfield width alone — a big ask, but essential.",
+        ],
+      },
+      mid:{
+        title:"Two wide mids cover the whole midfield — demanding and essential",
+        pts:[
+          "With the DM dropped, you two must cover all midfield — a huge responsibility.",
+          "Both mids: drop 5–6 yards as the ball enters your half, stay compact.",
+          "Near-side mid: shift inside toward Aux Cover — cut the wide-to-central pass.",
+          "Far-side mid: hold slightly higher and wider — you are the only fast-break outlet the team has.",
+          "Critical discipline: do NOT both chase the ball. If one goes, the other holds shape.",
+        ],
+        cue:"\"One chases, one holds! Near side drop! Far side — stay!\"",
+      },
+      fwd:{
+        title:"Drop and screen — become the 3rd midfielder for this phase",
+        pts:[
+          "With DM in the back line, you must fill the central midfield gap — drop toward halfway.",
+          "Position centrally between the ball and the opponent's DM or playmaker.",
+          "You are not pressing hard — you're blocking the easy escape pass with your body position.",
+          "Standing in their passing lane forces the carrier to play long or wide — both are slower to develop.",
+          "The moment we win the ball, pivot instantly — you're the striker again in under a second.",
+        ],
+        cue:"\"Screen their DM! Block the return pass! Pivot fast when we win it!\"",
+      },
+    },
+    {
+      back:{
+        title:"DM locked as 3rd CB — hold until the ball is fully cleared",
+        pts:[
+          "DM stays in the back line until the ball is completely cleared — no exceptions, no drifting.",
+          "Three-CB structure: Press/Pressure closest, Cover central, Auxiliary Cover far side.",
+          "Compress: no gaps wider than 4–5 yards between any two defenders.",
+          "On a cross: hold the line together, attack the ball as a unit, GK takes command.",
+        ],
+      },
+      mid:{
+        title:"Two wide mids defend the box edge — relentless, disciplined work",
+        pts:[
+          "Both wide mids get to the edge of the penalty area as the ball approaches.",
+          "Near-side mid: get into the cutback lane — the pulled-back ball is the highest-danger moment.",
+          "Far-side mid: top of the box — win the clearance, restart pressure immediately.",
+          "Track any attacker running centrally into the box on the blind side of the defense.",
+        ],
+        cue:"\"Box edge! Cutback lane! Second ball! Track the central runner!\"",
+      },
+      fwd:{
+        title:"Stay near halfway — be the counter-attack weapon",
+        pts:[
+          "Hold 25–30 yards from goal — do not enter the box unless absolutely necessary.",
+          "Keep moving in small bursts — maintain passing angles for when we win possession.",
+          "In the 2-3-1, a quick outlet to you is the team's best and often ONLY counter-attack option.",
+          "The moment any defender wins the ball, call for it loud and start your run immediately.",
+          "Watch the ball constantly — one clean line-breaking pass creates an instant 1v1 breakaway.",
+        ],
+        cue:"\"Stay near halfway! Keep moving! Call loud! Be ready to break!\"",
+      },
+    },
+  ],
+  u17_321:[
+    {
+      back:{
+        title:"Three CBs hold a flat line — central CB directs",
+        pts:[
+          "All three CBs hold a flat line ~10–12 yards above the penalty area — nobody pushes forward.",
+          "This is a holding shape, not a press. Let the play come to you.",
+          "Central CB leads: call 'step!' or 'hold!' to move the line as a connected unit.",
+          "Track any attacker drifting behind the midfield line — call them early before they turn.",
+        ],
+      },
+      mid:{
+        title:"Two mids guard the central corridor — the most critical space",
+        pts:[
+          "In the 3-2-1, two mids must protect the central corridor at all times — never leave it open.",
+          "Hold a compact double pivot — don't both chase the ball, stagger your positions slightly.",
+          "Screen the back line: intercept passes before they reach the CBs.",
+          "If the ball goes wide, one mid can shift — but the other must stay centrally.",
+        ],
+        cue:"\"Central! Protect the corridor! One shifts, one holds!\"",
+      },
+      fwd:{
+        title:"CF sits at the tip of the defensive triangle — shape the whole attack",
+        pts:[
+          "In 3-2-1, you sit at the very top of a compact defending triangle. Everything flows from your press angle.",
+          "Cut the most dangerous pass — usually the central lane — with your body position.",
+          "Move with the ball laterally — as it goes right, your shadow covers the left-central option.",
+          "Never get drawn wide — if you go wide, the two mids have a huge space to cover alone.",
+          "You're not stopping one player. You're deciding where the entire attack is allowed to go.",
+        ],
+        cue:"\"Tip of the triangle! Cut the central pass! Stay out of the wide lane!\"",
+      },
+    },
+    {
+      back:{
+        title:"Activate three-CB roles — structured and automatic",
+        pts:[
+          "Left CB → Press/Pressure (Closest Man): cut the forward pass angle first, then fully engage.",
+          "Central CB → Cover (Second Man): drop slightly to form the cover shadow behind the press.",
+          "Right CB → Auxiliary Cover (Third Man): track crossover runs, call 'switch!' loud and clear.",
+          "Automatic rotation: if the 1st is beaten → 2nd steps, 3rd becomes new Cover — no hesitation.",
+        ],
+      },
+      mid:{
+        title:"Drop and compact — two mids must cover a lot of ground",
+        pts:[
+          "Both mids drop 6–8 yards toward the back line as the press trigger fires.",
+          "Near-side mid: drop lower and inside — tuck behind the Auxiliary Cover defender.",
+          "Far-side mid: hold slightly higher — you are the only fast-break option if we win the ball.",
+          "With only two mids, neither can afford to be out of position — hold your structure tightly.",
+        ],
+        cue:"\"Drop! Near side get low! Far side hold shape! Stay tight!\"",
+      },
+      fwd:{
+        title:"Drop and create a 3-3 defensive block — screen the playmaker",
+        pts:[
+          "Drop toward halfway — you create a 3-3 block: 3 CBs behind + 2 mids + CF = 6 below the ball.",
+          "Your central position cuts off the opponent's DM or playmaker from receiving.",
+          "Stand between the ball and their most dangerous passer — you don't need to win it, just block it.",
+          "A composed, angled stand screens more effectively than an all-out sprint.",
+          "You're giving the team a 6-player defensive base — that's your biggest contribution in this stage.",
+        ],
+        cue:"\"3-3 block! Screen their playmaker! Position — don't sprint!\"",
+      },
+    },
+    {
+      back:{
+        title:"Lock the box — connected, compact, no diving",
+        pts:[
+          "Three CBs compress across the penalty area — no gaps wider than 4–5 yards.",
+          "Stay on your feet — delay and block, never dive recklessly near your own goal.",
+          "Force all play wide — nothing goes through the center channel.",
+          "On a cross: hold the line, attack the ball as a unit — GK takes command.",
+        ],
+      },
+      mid:{
+        title:"Two mids defend the box edge — 5-player wall",
+        pts:[
+          "Both mids tuck to the edge of the penalty area as the ball enters the final third.",
+          "Near-side mid: get into the cutback lane — stand there, not in the shooting lane.",
+          "Far-side mid: top of the box — win clearances and own the second ball.",
+          "Together with the 3 CBs, you form a tight 5-player defensive wall — compact and hard to break.",
+        ],
+        cue:"\"Box edge! Cutback lane! 5-player wall! Own the second ball!\"",
+      },
+      fwd:{
+        title:"Hold the transition position — be the counter-attack weapon",
+        pts:[
+          "Hold 25–35 yards from goal, central, slightly ball-side — stay in transition range.",
+          "Keep moving in small bursts — maintain passing angles for when we win possession.",
+          "In 3-2-1, a quick outlet pass to you on a turnover is the team's most dangerous weapon.",
+          "Don't stand still while your team defends — players who stand sacrifice the counter-attack.",
+          "On a clearance: be moving BEFORE the ball is cleared — that 1-second head start is everything.",
+        ],
+        cue:"\"Hold and move! Stay in range! On the clearance — go! Be the weapon!\"",
+      },
+    },
+  ],
+};
+
+/* ══════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════ */
+let state = { fid:"u14_331", si:0, rt:"back" };
+
+/* ══════════════════════════════════════════════════════════
+   SVG HELPERS
+══════════════════════════════════════════════════════════ */
+const SVG_NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs={}, parent=null) {
+  const e = document.createElementNS(SVG_NS, tag);
+  for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function txt(str, attrs={}, parent=null) {
+  const e = el("text", attrs, parent);
+  e.textContent = str;
+  return e;
+}
+
+/* ══════════════════════════════════════════════════════════
+   BUILD PITCH (once, then update positions)
+══════════════════════════════════════════════════════════ */
+let pitchBuilt = false;
+const playerEls = {}; // keyed by player id
+let atkEls = [];
+let pressArrowEl = null;
+
+function buildPitch() {
+  const svg = document.getElementById("pitch-svg");
+  svg.innerHTML = "";
+
+  // Defs
+  const defs = el("defs", {}, svg);
+  const marker = el("marker", { id:"ap", markerWidth:4, markerHeight:4, refX:2, refY:2, orient:"auto" }, defs);
+  el("polygon", { points:"0 0,4 2,0 4", fill:T.press, opacity:0.85 }, marker);
+
+  // Grass stripes
+  for (let i=0;i<7;i++) {
+    el("rect", { x:0, y:i*20, width:100, height:20,
+      fill: i%2===0 ? "#164a16" : "#1b5e1b" }, svg);
+  }
+
+  // Border
+  el("rect", { x:2, y:2, width:96, height:134, fill:"none",
+    stroke:"rgba(255,255,255,0.4)", "stroke-width":0.55 }, svg);
+
+  // Halfway line + label + spot + arc
+  el("line", { x1:2, y1:16, x2:98, y2:16, stroke:"rgba(255,255,255,0.4)", "stroke-width":0.55 }, svg);
+  txt("HALFWAY", { x:50, y:14.8, "text-anchor":"middle", "font-size":2.7,
+    fill:"rgba(255,255,255,0.32)", "font-family":"monospace" }, svg);
+  el("circle", { cx:50, cy:16, r:0.9, fill:"rgba(255,255,255,0.28)" }, svg);
+  el("path", { d:"M 36 16 Q 50 23 64 16", fill:"none",
+    stroke:"rgba(255,255,255,0.18)", "stroke-width":0.5 }, svg);
+
+  // Zone shading layers (initially hidden)
+  el("rect", { id:"zone-s2", x:2, y:16, width:96, height:74,
+    fill:"transparent" }, svg);
+  el("rect", { id:"zone-s3", x:18, y:90, width:64, height:38,
+    fill:"transparent" }, svg);
+
+  // Penalty box + arc + spot + 6yd box
+  el("rect", { x:18, y:90, width:64, height:38, fill:"rgba(255,255,255,0.03)",
+    stroke:"rgba(255,255,255,0.46)", "stroke-width":0.65 }, svg);
+  el("path", { d:"M 36 90 Q 50 82 64 90", fill:"none",
+    stroke:"rgba(255,255,255,0.3)", "stroke-width":0.5 }, svg);
+  el("circle", { cx:50, cy:107, r:0.75, fill:"rgba(255,255,255,0.36)" }, svg);
+  el("rect", { x:36, y:114, width:28, height:14, fill:"none",
+    stroke:"rgba(255,255,255,0.26)", "stroke-width":0.5 }, svg);
+
+  // Goal
+  el("rect", { x:40, y:128, width:20, height:5, fill:"rgba(0,0,0,0.45)",
+    stroke:"rgba(255,255,255,0.78)", "stroke-width":0.85 }, svg);
+  el("line", { x1:40, y1:128, x2:40, y2:133, stroke:"rgba(255,255,255,0.5)", "stroke-width":0.4 }, svg);
+  el("line", { x1:60, y1:128, x2:60, y2:133, stroke:"rgba(255,255,255,0.5)", "stroke-width":0.4 }, svg);
+
+  // Press arrow (hidden initially)
+  pressArrowEl = el("line", {
+    id:"press-arrow", x1:50, y1:90, x2:10, y2:50,
+    stroke:T.press, "stroke-width":0.85, "stroke-dasharray":"3,2.2",
+    opacity:0, "marker-end":"url(#ap)"
+  }, svg);
+
+  // Attacker groups
+  atkEls = [];
+  for (let i=0;i<3;i++) {
+    const g = el("g", { class:"player-group" }, svg);
+    g.style.cssText = "transition: transform 0.75s cubic-bezier(.4,0,.2,1)";
+    const ballCirc = el("circle", { cx:-5.8, cy:0, r:2.2, fill:"white", opacity:0 }, g);
+    el("circle", { cx:0, cy:0, r:4.6, fill:T.atk,
+      stroke:"rgba(255,255,255,0.7)", "stroke-width":0.7 }, g);
+    el("text", { x:0, y:1.6, "text-anchor":"middle", "font-size":3.1,
+      fill:"white", "font-weight":"bold", "font-family":"monospace" }, g);
+    g._ball = ballCirc;
+    g._text = g.querySelector("text");
+    atkEls.push(g);
+  }
+
+  // Build player groups for all players across all formations
+  const allIds = new Set();
+  for (const fm of Object.values(POS)) {
+    for (const stage of fm) {
+      for (const p of stage.def) allIds.add(p.id);
+    }
+  }
+
+  for (const pid of allIds) {
+    if (playerEls[pid]) continue;
+    const g = el("g", { class:"player-group" }, svg);
+    g.style.cssText = "transition: transform 0.75s cubic-bezier(.4,0,.2,1)";
+    // Outer glow ring (hidden by default)
+    const glow = el("circle", { cx:0, cy:0, r:7.2, fill:"transparent",
+      stroke:"transparent", "stroke-width":0.55 }, g);
+    const circ = el("circle", { cx:0, cy:0, r:4.6, fill:"#60a5fa",
+      stroke:"rgba(255,255,255,0.4)", "stroke-width":0.65 }, g);
+    const label = el("text", { x:0, y:1.6, "text-anchor":"middle", "font-size":2.9,
+      fill:"white", "font-weight":"bold", "font-family":"monospace" }, g);
+    const roleLabel = el("text", { x:0, y:-8, "text-anchor":"middle", "font-size":2.4,
+      fill:"transparent", "font-weight":"bold", "font-family":"monospace", opacity:0 }, g);
+    g._glow  = glow;
+    g._circ  = circ;
+    g._label = label;
+    g._role  = roleLabel;
+    playerEls[pid] = g;
+  }
+
+  // GK (static)
+  const gkG = el("g", {}, svg);
+  el("circle", { cx:50, cy:124, r:4.6, fill:T.gk,
+    stroke:"rgba(255,255,255,0.6)", "stroke-width":0.8 }, gkG);
+  txt("GK", { x:50, y:125.6, "text-anchor":"middle", "font-size":2.9,
+    fill:"#000", "font-weight":"bold", "font-family":"monospace" }, gkG);
+
+  pitchBuilt = true;
+}
+
+/* ══════════════════════════════════════════════════════════
+   UPDATE PITCH POSITIONS
+══════════════════════════════════════════════════════════ */
+function updatePitch() {
+  const { fid, si } = state;
+  const pos = POS[fid][si];
+  const sm  = STAGES[si];
+
+  // Zone shading
+  const z2 = document.getElementById("zone-s2");
+  const z3 = document.getElementById("zone-s3");
+  z2.setAttribute("fill", si >= 1 ? `${sm.col}07` : "transparent");
+  z3.setAttribute("fill", si >= 2 ? `${sm.col}11` : "transparent");
+
+  // Hide ALL player groups first
+  for (const g of Object.values(playerEls)) {
+    g.style.display = "none";
+  }
+
+  // Update and show current formation's players
+  for (const p of pos.def) {
+    const g = playerEls[p.id];
+    if (!g) continue;
+    g.style.display = "";
+    g.style.transform = `translate(${p.x}px,${p.y}px)`;
+
+    const isRole = ["press","cover","aux"].includes(p.r);
+    const isCF   = p.r === "cf";
+    const rc     = T[p.r] || T.cb;
+    const darkText= ["press","cover","aux","cf","gk"].includes(p.r);
+
+    // Glow ring
+    if (isRole || (isCF && si > 0)) {
+      g._glow.setAttribute("fill",   `${rc}18`);
+      g._glow.setAttribute("stroke", rc);
+    } else {
+      g._glow.setAttribute("fill",   "transparent");
+      g._glow.setAttribute("stroke", "transparent");
+    }
+
+    // Circle
+    g._circ.setAttribute("fill",          rc);
+    g._circ.setAttribute("stroke",        isRole ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.4)");
+    g._circ.setAttribute("stroke-width",  isRole ? 1.4 : 0.65);
+
+    // Label text
+    g._label.textContent          = p.drop ? "DM" : p.n;
+    g._label.setAttribute("fill", darkText ? "#000" : "white");
+
+    // Role label
+    if (isRole) {
+      const roleText = p.r==="press"?"PRESS": p.r==="cover"?"COVER":"AUX";
+      g._role.textContent = roleText;
+      g._role.setAttribute("fill",    rc);
+      g._role.setAttribute("opacity", 1);
+    } else if (p.drop) {
+      g._role.textContent = "COVER";
+      g._role.setAttribute("fill",    T.cover);
+      g._role.setAttribute("opacity", 1);
+    } else {
+      g._role.textContent = "";
+      g._role.setAttribute("opacity", 0);
+    }
+  }
+
+  // Attackers
+  for (let i=0; i<3; i++) {
+    const a   = pos.atk[i];
+    const g   = atkEls[i];
+    g.style.transform = `translate(${a.x}px,${a.y}px)`;
+    g._text.textContent = a.n;
+    g._ball.setAttribute("opacity", a.b ? 0.88 : 0);
+  }
+
+  // Press arrow
+  const pp = pos.def.find(p => p.r === "press");
+  if (si >= 1 && pp) {
+    const dx = pp.x > pos.ball.x ? 3.5 : -3.5;
+    const dy = pp.y > pos.ball.y ? 4   : -4;
+    pressArrowEl.setAttribute("x1", pp.x);
+    pressArrowEl.setAttribute("y1", pp.y - 4.8);
+    pressArrowEl.setAttribute("x2", pos.ball.x + dx);
+    pressArrowEl.setAttribute("y2", pos.ball.y + dy);
+    pressArrowEl.setAttribute("opacity", 0.72);
+  } else {
+    pressArrowEl.setAttribute("opacity", 0);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   RENDER FUNCTIONS
+══════════════════════════════════════════════════════════ */
+function hex2(h) { return h + "22"; }
+
+function renderFmTabs() {
+  const wrap = document.getElementById("fm-tabs");
+  wrap.innerHTML = "";
+  for (const [k, f] of Object.entries(FM)) {
+    const btn = document.createElement("button");
+    btn.className = "fm-tab" + (state.fid===k ? " active" : "");
+    btn.style.cssText = state.fid===k
+      ? `border-color:${f.col}; background:${f.col}1e; color:${f.acc};`
+      : "";
+    btn.innerHTML = `<div class="tab-name">${f.name}</div><div class="tab-fmt">${f.fmt}</div>`;
+    btn.onclick = () => { state.fid=k; state.si=0; state.rt="back"; render(); };
+    wrap.appendChild(btn);
+  }
+}
+
+function renderStageRow() {
+  const wrap = document.getElementById("stage-row");
+  wrap.innerHTML = "";
+  STAGES.forEach((s,i) => {
+    const btn = document.createElement("button");
+    btn.className = "stage-btn";
+    if (state.si===i) {
+      btn.style.cssText = `border-color:${s.col}; background:${s.col}16;`;
+    }
+    btn.innerHTML = `
+      <div class="s-tag" style="color:${state.si===i ? s.col : ""};">${s.tag}</div>
+      <div class="s-title" style="color:${state.si===i ? "#fff" : ""};">${s.title}</div>
+      <div class="s-sub" style="color:${state.si===i ? s.col+"aa" : ""};">${s.sub.replace("Ball ","")}</div>`;
+    btn.onclick = () => { state.si=i; state.rt="back"; render(); };
+    wrap.appendChild(btn);
+  });
+}
+
+function renderStageDesc() {
+  const sm   = STAGES[state.si];
+  const wrap = document.getElementById("stage-desc");
+  wrap.style.cssText = `background:${sm.col}0d; border:1px solid ${sm.col}26;`;
+  wrap.innerHTML = `
+    <div class="stage-dot" style="background:${sm.col};"></div>
+    <span class="s-label" style="color:${sm.col};">${sm.title}</span>
+    <span class="s-text">${sm.desc}</span>`;
+}
+
+function renderLegend() {
+  const wrap = document.getElementById("legend");
+  const is231 = state.fid === "u17_231";
+  const items = [
+    { c:T.press, l:"Press/Pressure (Closest Man)" },
+    { c:T.cover, l: is231 ? "Cover — DM drops as 2nd Man" : "Cover (Second Man)" },
+    { c:T.aux,   l:"Auxiliary Cover (Third Man)" },
+    { c:T.mid,   l: is231 ? "Holding Mid (DM) / Wide Mid" : "Midfielder" },
+    { c:T.cf,    l:"Center Forward (CF)" },
+    { c:T.atk,   l:"Opponent" },
+  ];
+  wrap.innerHTML = items.map(it =>
+    `<div class="legend-item">
+      <div class="legend-dot" style="background:${it.c};"></div>${it.l}
+    </div>`
+  ).join("");
+}
+
+function renderExplainer231() {
+  const el231 = document.getElementById("explainer-231");
+  const is231 = state.fid === "u17_231";
+  const show  = is231 && state.si > 0;
+  el231.classList.toggle("hidden", !show);
+  if (!show) return;
+  el231.style.cssText = "border:1px solid #22d3ee28; background:#22d3ee07; margin:10px 0 0; padding:12px 14px; border-radius:9px; font-size:12px; color:var(--muted); line-height:1.72;";
+  const msg = state.si===1
+    ? "The Holding Mid (DM) drops between the two CBs to create a temporary 3-man back line — this is the defining move of this system. The two wide mids must now cover all midfield width alone. The DM must commit fully with no hesitation."
+    : "DM stays locked in the back line as a 3rd CB until the ball is completely cleared. The two remaining wide mids carry the full midfield workload — demanding, but essential to keeping the box protected.";
+  el231.innerHTML = `<strong style="color:#22d3ee;">⚙ 2-3-1 Key Mechanism: </strong>${msg}`;
+}
+
+function renderRolePills() {
+  const wrap  = document.getElementById("role-pills");
+  const show  = state.si > 0 && state.rt === "back";
+  wrap.classList.toggle("hidden", !show);
+  if (!show) return;
+  const is231 = state.fid === "u17_231";
+  const pills = [
+    { c:T.press, l:"Press/Pressure", s:"(Closest Man)" },
+    { c:T.cover, l:"Cover",          s: is231 ? "(DM — 2nd Man)" : "(Second Man)" },
+    { c:T.aux,   l:"Auxiliary Cover", s:"(Third Man)" },
+  ];
+  wrap.innerHTML = pills.map(p =>
+    `<div class="role-pill" style="background:${p.c}12; border:1px solid ${p.c}35;">
+      <div class="pill-label" style="color:${p.c};">${p.l}</div>
+      <div class="pill-sub">${p.s}</div>
+    </div>`
+  ).join("");
+}
+
+function renderRoleTabs() {
+  const wrap = document.getElementById("role-tabs");
+  wrap.innerHTML = "";
+  const RTABS = [
+    { id:"back", em:"🛡", l:"Backline" },
+    { id:"mid",  em:"⚡", l:"Midfield" },
+    { id:"fwd",  em:"🎯", l:"Forward"  },
+  ];
+  RTABS.forEach(r => {
+    const rc  = r.id==="back" ? STAGES[state.si].col : r.id==="mid" ? T.mid : T.cf;
+    const btn = document.createElement("button");
+    btn.className = "role-tab" + (state.rt===r.id ? " active" : "");
+    btn.style.cssText = state.rt===r.id
+      ? `border-color:${rc}; background:${rc}18; color:${rc};`
+      : "";
+    btn.innerHTML = `<span style="margin-right:4px;">${r.em}</span>${r.l}`;
+    btn.onclick = () => { state.rt = r.id; render(); };
+    wrap.appendChild(btn);
+  });
+}
+
+function renderContentPanel() {
+  const pc   = state.rt==="back" ? STAGES[state.si].col : state.rt==="mid" ? T.mid : T.cf;
+  const data = C[state.fid][state.si][state.rt];
+  const wrap = document.getElementById("content-panel");
+  wrap.style.cssText = `border:1px solid ${pc}20; background:${pc}07; padding:16px; border-radius:10px; min-height:170px;`;
+  if (!data) { wrap.innerHTML = ""; return; }
+  wrap.innerHTML = `
+    <div class="panel-title" style="color:${pc};">${data.title}</div>
+    <div class="panel-items">
+      ${data.pts.map((pt,i) => `
+        <div class="panel-item">
+          <div class="item-num" style="background:${pc}1e; border:1.5px solid ${pc}55; color:${pc};">${i+1}</div>
+          <div class="item-text">${pt}</div>
+        </div>`).join("")}
+      ${data.cue ? `<div class="panel-cue" style="background:${pc}11; border:1px solid ${pc}2e;">🗣 ${data.cue}</div>` : ""}
+    </div>`;
+}
+
+function renderQuickRef() {
+  const fm = FM[state.fid];
+  document.getElementById("qr-title").textContent =
+    `Quick Cue Reference · ${fm.name} · ${fm.fmt}`;
+  const grid = document.getElementById("qr-grid");
+  grid.innerHTML = "";
+  const roleKeys = ["back","mid","fwd"];
+  const roleLabels = { back:"Backline", mid:"Midfield", fwd:"Forward" };
+
+  STAGES.forEach((s,i) => {
+    const card = document.createElement("div");
+    card.className = "qr-card";
+    card.style.cssText = `background:${s.col}0b; border:1px solid ${s.col}24;`;
+    let inner = `<div class="qr-stage-title" style="color:${s.col};">${s.title}</div>`;
+    for (const k of roleKeys) {
+      const d = C[state.fid][i][k];
+      if (!d || !d.cue) continue;
+      const rc = k==="back" ? s.col : k==="mid" ? T.mid : T.cf;
+      inner += `
+        <div style="margin-bottom:5px;">
+          <div class="qr-role-label" style="color:${rc};">${roleLabels[k]}</div>
+          <div class="qr-cue" style="border-left:2px solid ${rc}44;">${d.cue}</div>
+        </div>`;
+    }
+    card.innerHTML = inner;
+    grid.appendChild(card);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   MAIN RENDER
+══════════════════════════════════════════════════════════ */
+function render() {
+  renderFmTabs();
+  document.getElementById("fm-note").textContent = FM[state.fid].note;
+  renderStageRow();
+  renderStageDesc();
+  if (!pitchBuilt) buildPitch();
+  updatePitch();
+  renderLegend();
+  renderExplainer231();
+  renderRolePills();
+  renderRoleTabs();
+  renderContentPanel();
+  renderQuickRef();
+}
+
+function dismissIntro() {
+  document.getElementById("intro-card").classList.add("hidden");
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
