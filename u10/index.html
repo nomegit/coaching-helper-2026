@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Solo Training Hub - U10 Girls</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0d1b0f;--surface:#132318;--card:#1a2e1e;--border:#2a4030;
+  --green:#3ddc68;--lime:#b5f53a;--yellow:#ffe145;--white:#f0f8f1;
+  --muted:#7aab86;--sky:#5ee8ff;--purple:#c97fff;--pink:#ff7eb3;
+  --orange:#ff9a3c;--red:#ff5e5e;
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+header{position:relative;text-align:center;padding:48px 24px 36px;background:linear-gradient(180deg,#0a1a0c,transparent);overflow:hidden}
+.hpitch{position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(61,220,104,.04) 0,rgba(61,220,104,.04) 40px,transparent 40px,transparent 80px);pointer-events:none}
+.ball-spin{font-size:54px;display:block;animation:spin 8s linear infinite;filter:drop-shadow(0 0 16px rgba(61,220,104,.6))}
+@keyframes spin{to{transform:rotate(360deg)}}
+header h1{font-family:'Fredoka One',cursive;font-size:clamp(1.9rem,6vw,3.4rem);color:var(--lime);margin-top:8px;text-shadow:0 0 28px rgba(181,245,58,.35)}
+header p{color:var(--muted);font-size:.95rem;font-weight:600;margin-top:6px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.tag{background:rgba(61,220,104,.12);border:1px solid rgba(61,220,104,.3);color:var(--green);font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:20px}
+main{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:0 16px 80px}
+.sec-title{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin:34px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.scard{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:18px 15px;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.scard:hover::before,.scard.active::before{transform:scaleX(1)}
+.scard:hover,.scard.active{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.scard.active{background:#1e3524}
+.scard-icon{font-size:1.9rem;display:block;margin-bottom:7px}
+.scard h3{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--white)}
+.scard p{font-size:.73rem;color:var(--muted);margin-top:3px;line-height:1.4}
+.dcnt{display:inline-block;margin-top:9px;font-size:.68rem;font-weight:800;color:var(--accent);background:rgba(255,255,255,.05);padding:2px 8px;border-radius:10px}
+#panel{display:none;margin-top:22px;animation:fsu .32s ease}
+#panel.on{display:block}
+@keyframes fsu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.ph{background:var(--surface);border:1.5px solid var(--border);border-radius:16px 16px 0 0;padding:22px 22px 18px;display:flex;align-items:center;gap:14px}
+.ph-icon{font-size:2.3rem}
+.ph-text h2{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--pa);line-height:1}
+.ph-text p{font-size:.8rem;color:var(--muted);margin-top:3px}
+.ptip{background:rgba(255,255,255,.04);border-left:3px solid var(--pa);padding:13px 22px;font-size:.8rem;color:var(--muted);font-style:italic}
+.slegend{background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sl-lbl{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.st{font-size:.66rem;font-weight:800;padding:3px 9px;border-radius:10px;display:inline-block}
+.st-straight{background:rgba(255,94,94,.18);color:#ff8c8c;border:1px solid rgba(255,94,94,.3)}
+.st-knuckle{background:rgba(94,232,255,.15);color:#5ee8ff;border:1px solid rgba(94,232,255,.3)}
+.st-drop{background:rgba(201,127,255,.15);color:#c97fff;border:1px solid rgba(201,127,255,.3)}
+.st-combo{background:rgba(255,225,69,.12);color:#ffe145;border:1px solid rgba(255,225,69,.3)}
+.plegend{background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.phase-badge{font-size:.66rem;font-weight:800;padding:3px 9px;border-radius:10px;display:inline-block}
+.ph-nobll{background:rgba(255,225,69,.12);color:#ffe145;border:1px solid rgba(255,225,69,.3)}
+.ph-ball{background:rgba(61,220,104,.15);color:#3ddc68;border:1px solid rgba(61,220,104,.3)}
+.ph-adv{background:rgba(201,127,255,.15);color:#c97fff;border:1px solid rgba(201,127,255,.3)}
+.dlist{border:1.5px solid var(--border);border-top:none;border-radius:0 0 16px 16px;overflow:hidden}
+.di{background:var(--card);border-bottom:1px solid var(--border)}
+.di:last-child{border-bottom:none}
+.dh{display:flex;align-items:center;gap:12px;padding:15px 18px;cursor:pointer;transition:background .15s;user-select:none}
+.dh:hover{background:rgba(255,255,255,.03)}
+.dnum{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--pa);min-width:26px;text-align:center;opacity:.7}
+.dnw{flex:1}
+.dname{font-weight:800;font-size:.92rem;color:var(--white)}
+.dmeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.pill{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px}
+.pt{background:rgba(61,220,104,.15);color:var(--green)}
+.ps{background:rgba(90,232,255,.12);color:var(--sky)}
+.pl{background:rgba(255,225,69,.12);color:var(--yellow)}
+.dchev{font-size:.78rem;color:var(--muted);transition:transform .25s}
+.di.open .dchev{transform:rotate(180deg)}
+.db{display:none;padding:0 18px 18px 56px;animation:fi .2s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.di.open .db{display:block}
+.ddesc{font-size:.86rem;color:#c8e0cc;line-height:1.65;margin-bottom:12px}
+.tbox{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 13px;margin-bottom:12px}
+.tbox-title{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--pa);margin-bottom:7px}
+.tpts{list-style:none;display:flex;flex-direction:column;gap:4px}
+.tpts li{display:flex;gap:7px;font-size:.8rem;color:#c8e0cc;line-height:1.45}
+.tarr{color:var(--pa);font-weight:900;flex-shrink:0}
+.pbox{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 13px;margin-bottom:12px}
+.pbox-title{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
+.phases{display:flex;flex-direction:column;gap:6px}
+.phase-row{display:flex;gap:8px;align-items:flex-start;font-size:.8rem;color:#c8e0cc;line-height:1.45}
+.howto{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:7px}
+.steps{list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.steps li{display:flex;gap:9px;font-size:.82rem;color:#c8e0cc;line-height:1.5}
+.sdot{min-width:19px;height:19px;background:var(--pa);border-radius:50%;color:var(--bg);font-size:.62rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.cbox{background:rgba(255,225,69,.07);border:1px solid rgba(255,225,69,.25);border-radius:10px;padding:11px 13px;display:flex;gap:9px;align-items:flex-start}
+.cico{font-size:1.05rem;flex-shrink:0}
+.ctxt{font-size:.8rem;color:#ffe89a;line-height:1.5}
+.ctxt strong{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--yellow);margin-bottom:2px}
+.close-btn{display:block;width:fit-content;margin:14px auto 0;background:transparent;border:1.5px solid var(--border);color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;font-size:.78rem;padding:7px 18px;border-radius:20px;cursor:pointer;transition:border-color .2s,color .2s}
+.close-btn:hover{border-color:var(--green);color:var(--green)}
+.prog-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:4px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.prog-lbl{font-size:.76rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.prog-track{flex:1;min-width:90px;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--lime));border-radius:4px;width:0%;transition:width .5s ease}
+.prog-pct{font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--lime);white-space:nowrap}
+footer{text-align:center;padding:28px 16px;font-size:.73rem;color:#3a5c42;border-top:1px solid var(--border);margin-top:36px}
+@media(max-width:480px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .db{padding-left:18px}
+  .dnum{display:none}
+  .ph{padding:14px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hpitch"></div>
+  <span class="ball-spin">&#9917;</span>
+  <h1>Solo Training Hub</h1>
+  <p>U10 Girls &middot; Off-Season Home Practice</p>
+  <div class="tags">
+    <span class="tag">&#127968; Train At Home</span>
+    <span class="tag">&#9889; Solo Drills</span>
+    <span class="tag">&#127775; Challenge Unlocks</span>
+    <span class="tag">&#127919; 10 Skill Areas</span>
+  </div>
+</header>
+<main>
+  <div class="prog-wrap" id="pw" style="display:none">
+    <span class="prog-lbl">&#127885; Drills Explored</span>
+    <div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+    <span class="prog-pct" id="pp">0%</span>
+  </div>
+  <p class="sec-title">&#9917; Choose a Skill to Train</p>
+  <div class="grid" id="grid"></div>
+  <div id="panel"></div>
+</main>
+<footer>&#9917; Train hard, play with joy &middot; U10 Girls Soccer</footer>
+<script>
+var skills=[
+{id:"ball-handling",icon:"&#129335;",name:"Ball Handling",accent:"#3ddc68",
+ tagline:"Get comfy with the ball at your feet",
+ tip:"The more you touch the ball each day, the more natural it feels. Even 5 minutes counts!",
+ drills:[
+  {name:"Toe Taps",time:"30-60 sec",space:"Tiny",level:"Beginner",
+   desc:"Rapidly alternate tapping the top of the ball with the toes of each foot, keeping the ball still underneath you.",
+   steps:["Stand with the ball between your feet.","Tap the top lightly with right toes.","Switch to left toes — keep alternating fast.","Stay on the balls of your feet, not flat-footed.","Head up, body relaxed."],
+   challenge:"Close your eyes after 10 taps and keep going! Or count — how many in 30 seconds?"},
+  {name:"Sole Rolls",time:"30-60 sec",space:"Tiny",level:"Beginner",
+   desc:"Roll the ball side to side using the sole of your foot. Teaches you to feel the ball with the bottom of your foot — great for close control.",
+   steps:["Place the sole of your right foot on top of the ball.","Roll it sideways to your left foot.","Use your left sole to roll it back.","Keep alternating — find a rhythm.","Knees slightly bent, stay low."],
+   challenge:"Increase the reach each roll — make yourself stretch side to side. Or try one foot only for 20 reps."},
+  {name:"Inside-Outside Toggle",time:"30 sec each foot",space:"Tiny",level:"Beginner",
+   desc:"Using one foot, tap the ball with the inside, then the outside, then inside again. Trains both sides of the same foot.",
+   steps:["Place the ball in front of one foot.","Tap it with the inside of your foot.","Quickly tap it back with the outside.","Keep the ball close — tiny touches!","30 seconds, then switch feet."],
+   challenge:"Switch feet on every single touch — right inside, left outside, right inside — as fast as possible!"},
+  {name:"Figure-8 Around Ankles",time:"45 sec",space:"Tiny",level:"Beginner",
+   desc:"Weave the ball in a figure-8 through and around your feet. This is a feel drill — slow and smooth wins.",
+   steps:["Stand with feet shoulder-width apart.","Push the ball forward with the inside of your right foot.","Guide it behind your left foot, then back to the right.","Trace a continuous figure-8.","Smooth and non-stop."],
+   challenge:"Do the whole drill without looking down at the ball. Feel it with your feet!"},
+  {name:"Sole Circles",time:"30 sec each direction",space:"Tiny",level:"Beginner",
+   desc:"Use the sole of your foot to roll the ball in a small circle around your other foot.",
+   steps:["Place one foot on top of the ball, sole flat.","Roll it slowly in a circle around your other foot.","Weight on your standing leg.","10 circles clockwise, then 10 counter-clockwise.","Switch feet and repeat."],
+   challenge:"Speed up to max control. Try switching feet on every circle!"},
+  {name:"Around the World",time:"45 sec",space:"Tiny",level:"Intermediate",
+   desc:"Circle the ball around one stationary foot using the other foot — like the ball is orbiting a planet.",
+   steps:["Place your right foot beside the ball.","Use your left foot to roll the ball all the way around your right.","Tight orbit — no big strays.","5 circles, then switch feet.","Balance on your standing leg."],
+   challenge:"Alternate feet every circle without pausing — right around left, left around right."},
+  {name:"Juggle and Catch",time:"2 min",space:"Tiny",level:"Beginner",
+   desc:"Toss the ball gently, tap it up with your foot, then catch it. Removes the pressure of long streaks while building juggling feel.",
+   steps:["Hold the ball in both hands.","Drop it and quickly tap up with your laces.","Let it rise, then catch it.","Make each tap feel the same.","Clean flat laces surface — not toes!"],
+   challenge:"Two taps before catching! Then three. Build your streak one step at a time."},
+  {name:"Ball Hop Lateral",time:"30 sec",space:"Small",level:"Beginner",
+   desc:"Place the ball on the ground and hop side to side over it quickly. Builds footwork rhythm and light feet.",
+   steps:["Place the ball to your right side.","Hop with both feet over it to the left.","Hop immediately back to the right.","Stay on your toes — quick, bouncy hops.","Keep jumps low and fast."],
+   challenge:"After each hop, touch the top of the ball with one foot before jumping back. Alternate feet!"}
+]},
+{id:"dribbling",icon:"&#127939;",name:"Dribbling",accent:"#5ee8ff",
+ tagline:"Move with the ball like it's glued to your foot",
+ tip:"Great dribblers use SMALL touches and change speed suddenly. Practice slow then fast — not just full speed the whole time.",
+ drills:[
+  {name:"Cone Slalom",time:"5-10 min",space:"Medium",level:"Beginner",
+   desc:"Set up 5-7 cones about 1 yard apart in a line. Dribble through weaving left and right, using inside and outside of both feet.",
+   steps:["Set up 5-7 markers 1 yard apart.","Weave through side to side.","Inside right going left, inside left going right.","Turn at the end and come back.","Keep the ball close — not kicking it far ahead."],
+   challenge:"Use ONLY your weaker foot the entire way. No help from the stronger foot!"},
+  {name:"Box Dribble",time:"2 min",space:"Small",level:"Beginner",
+   desc:"Mark a 5x5 yard square. Dribble inside without letting the ball leave. Tight control under pressure.",
+   steps:["Mark a 5x5 yard box.","Dribble inside, changing direction at the edges.","Ball under control at all times.","Imagine defenders forcing you to stay inside.","Both feet equally."],
+   challenge:"Outside of your feet only. No inside-of-foot touches allowed!"},
+  {name:"Speed Dribble and Freeze",time:"5 min",space:"Large",level:"Beginner",
+   desc:"Sprint as fast as you can with the ball, then stop it completely at the marker. Explosive acceleration AND sharp stops.",
+   steps:["Two markers 10-15 yards apart.","Sprint with the ball as fast as possible.","At the marker, STOP the ball with your sole.","Pause 1 second, turn, sprint back.","Ball stays close even at full speed."],
+   challenge:"After stopping, do a 180 degree spin turn, then sprint the opposite direction. Tight spin!"},
+  {name:"Scissors Move and Go",time:"5 min",space:"Small",level:"Intermediate",
+   desc:"Practice the scissors fake at a cone, then burst away. Step OVER the ball, then push it the other way.",
+   steps:["One cone 5 yards away.","Dribble slowly toward it.","Step your right foot OVER the ball outside to inside.","Push the ball left with your left foot.","Accelerate away — you fooled the defender!"],
+   challenge:"DOUBLE scissors — two step-overs before pushing away. Fast and convincing!"},
+  {name:"4-Corner Dribble",time:"3 min",space:"Medium",level:"Beginner",
+   desc:"Mark four corners in a 6x6 yard square. Dribble to each corner making a sharp directional cut.",
+   steps:["4 markers in a square.","Dribble to corner 1, cut to corner 2.","Sharp inside-foot cut at each corner.","Continue all 4 corners.","5 times clockwise, 5 times counter-clockwise."],
+   challenge:"Add a sole pull-back before each cut. Don't slow down too much!"},
+  {name:"Tight Pocket Dribble",time:"90 sec",space:"Tiny",level:"Intermediate",
+   desc:"Mark a 2x2 yard square — very tiny! Dribble inside with the softest, most delicate touches possible.",
+   steps:["2x2 yard box.","Dribble inside — never let the ball leave.","Softest touches possible.","Constant direction changes.","Stay low, body shielding the ball."],
+   challenge:"Inside of one foot only for 45 seconds. Then switch for 45 seconds."},
+  {name:"Inside-Cut and Accelerate",time:"5 min",space:"Medium",level:"Intermediate",
+   desc:"Jog to a cone, make a sharp inside-foot cut, then EXPLODE away. The change of pace is as important as the cut.",
+   steps:["One cone 8 yards away.","Jog slowly toward it with the ball.","Sharp inside-foot cut to the side.","Immediately sprint 4-5 yards away.","Jog back, repeat from other side."],
+   challenge:"Add a stepover BEFORE the cut. Fake one way, cut the other — a real game combo!"},
+  {name:"L-Turn Drill",time:"5 min",space:"Small",level:"Intermediate",
+   desc:"Dribble to a cone, drag the ball back with your sole, then push it sideways. Great for escaping pressure.",
+   steps:["2 cones about 5 yards apart.","Dribble toward the first cone.","Drag the ball straight back with your sole.","Push it sideways with the inside of your foot.","Sprint to the second cone and repeat."],
+   challenge:"Push the ball BEHIND your standing leg — much trickier!"}
+]},
+{id:"scanning",icon:"&#128064;",name:"Scanning",accent:"#c97fff",
+ tagline:"See the whole field before you touch the ball",
+ tip:"Scanning means looking BEFORE the ball arrives. Great players look up at least once every 2 seconds — build the habit!",
+ drills:[
+  {name:"Head-Up Dribble",time:"3 min",space:"Medium",level:"Beginner",
+   desc:"Dribble in a box — you MUST look up at least once between every two touches. Don't stare at the ball.",
+   steps:["Set up a medium box with 4 cones.","Begin dribbling inside.","Between every two touches, flick your eyes UP.","Look for something — a cone color, a landmark.","Feel the ball without always watching it."],
+   challenge:"Every time you look up, call out the COLOR of something you see!"},
+  {name:"Shoulder Check Habit",time:"90 sec",space:"Small",level:"Beginner",
+   desc:"While dribbling slowly in a circle, do an exaggerated shoulder check before every single touch.",
+   steps:["Dribble slowly in a large circle.","Before each touch, look sharply left then right.","Exaggerate the head turn — build muscle memory.","It will feel slow at first. That's OK.","String together 20 touches, check before each."],
+   challenge:"Count shoulder checks out loud. 30 checks in 90 seconds without stopping!"},
+  {name:"Cone Hunt Color Order",time:"5 min",space:"Large",level:"Intermediate",
+   desc:"Scatter 5 different colored cones. While dribbling, find and touch them in a set order. Forces constant scanning.",
+   steps:["Scatter 5 colored cones randomly.","Set an order: red, yellow, blue, green, orange.","Dribble and scan to find each color in order.","Touch each cone with your foot.","Time yourself — get faster each round!"],
+   challenge:"Change the order each round so you cannot memorize it. Real scanning every time!"},
+  {name:"Glance and Turn",time:"2 min",space:"Small",level:"Beginner",
+   desc:"Dribble in a square. You must LOOK UP before every corner turn — the glance comes BEFORE the touch.",
+   steps:["4 cones in a square.","Dribble toward a corner.","BEFORE reaching the corner, look up and scan.","THEN make your turn.","The scan must come before the touch."],
+   challenge:"Decide your turn direction based on what you see — imagine a defender on the left, turn right!"},
+  {name:"Dribble and Call Out",time:"2 min",space:"Medium",level:"Beginner",
+   desc:"While dribbling, call out something new you see every 5 seconds. Forces true eyes-up awareness.",
+   steps:["Dribble freely in your yard.","Every 5 seconds, call out something visible.","Can't repeat the same thing twice.","Ball moving the whole time.","If you run out of things to say, you're ball-watching!"],
+   challenge:"Name 5 NEW things every single lap. Always be scanning."},
+  {name:"Juggle and Look Up",time:"2 min",space:"Tiny",level:"Intermediate",
+   desc:"Juggle 3 times, look up and identify something before your next set. Trains head-up instinct in aerial situations.",
+   steps:["Start juggling.","After every 3 juggles, quickly look up.","Identify something — say it out loud.","Resume for another 3.","Don't let the ball drop while you look!"],
+   challenge:"Increase to 5 juggles per set. Then try looking up on EVERY single touch."},
+  {name:"Wall Pass Scan",time:"3 min",space:"Small",level:"Intermediate",
+   desc:"Pass to a wall and receive back. BEFORE each return pass, do a full shoulder scan left and right.",
+   steps:["Stand 4-6 yards from a wall.","Pass the ball to the wall.","As it comes back, scan left then right.","Receive, THEN pass again.","Scan while the ball is traveling."],
+   challenge:"After scanning, take your first touch in the safer direction before passing again."},
+  {name:"Peripheral Cone Check",time:"3 min",space:"Small",level:"Advanced",
+   desc:"Place cones at the edge of your vision. Without fully turning your head, track them as you dribble.",
+   steps:["Set cones at various positions around you.","Dribble in a small square.","Without turning fully, see cones at your vision edges.","Develop awareness of what's BESIDE you.","Elite players feel space without fully turning."],
+   challenge:"Have a parent raise their hand at a cone. Call 'hand up!' without stopping or fully turning!"}
+]},
+{id:"passing",icon:"&#127919;",name:"Passing",accent:"#ff9a3c",
+ tagline:"Deliver the ball cleanly to the right spot",
+ tip:"A good pass lands at your teammate's feet — not behind them, not too far ahead. Think about pace and direction BEFORE you kick.",
+ drills:[
+  {name:"Wall Pass Accuracy",time:"5 min",space:"Small",level:"Beginner",
+   desc:"The wall is your passing partner! Pass with the inside of your foot, receive back, and pass again. Hit the SAME spot every time.",
+   steps:["Stand 4-6 yards from a wall.","Inside of right foot — pass firmly.","Receive with your left foot.","Pass again with the right.","Lock onto the same target spot on the wall."],
+   challenge:"Tape a target on the wall. Can you hit it 10 times in a row? 15?"},
+  {name:"One-Touch Wall Pass",time:"3 min",space:"Small",level:"Intermediate",
+   desc:"Pass to the wall and return it in ONE touch. No stopping — receive and instantly redirect.",
+   steps:["Stand 4 yards from the wall.","Pass firmly.","Prepare your foot BEFORE the ball arrives.","Redirect in one smooth touch.","Stay light on your feet."],
+   challenge:"Weak foot only for all passes. 2 full minutes — no cheating!"},
+  {name:"Gate Passing",time:"5 min",space:"Small",level:"Beginner",
+   desc:"Set two cones 1 foot apart as a gate. Pass through from a distance. Forces accurate aim.",
+   steps:["2 cones 1 foot apart — the gate.","Stand 6 yards away.","Pass cleanly through the gate.","Retrieve and repeat.","Standing foot position and locked ankle."],
+   challenge:"Move to 10 yards away. Make the gate only 8 inches wide. Perfect aim required!"},
+  {name:"Pass and Move",time:"5 min",space:"Medium",level:"Intermediate",
+   desc:"Pass to the wall then immediately take 2 sideways steps. Players never stand still after passing in a game!",
+   steps:["Pass firmly to the wall.","Take 2 quick shuffle steps left or right.","Get set from the new position.","Receive cleanly, pass again.","Alternate left and right each time."],
+   challenge:"Two-touch max rule: control plus pass only. No extra dribbles!"},
+  {name:"Alternating Foot Passes",time:"3 min",space:"Small",level:"Beginner",
+   desc:"Pass right, receive left, pass left, receive right. Builds comfort passing on both feet.",
+   steps:["Pass right, wall, control left.","Pass left, wall, control right.","Alternate: right, left, right, left.","Both feet use proper inside-of-foot contact.","Same pace throughout."],
+   challenge:"No controlling step — receive and immediately pass back with the SAME foot you received with. Pure one-touch alternating!"},
+  {name:"4-Cone Pass Pattern",time:"5 min",space:"Medium",level:"Intermediate",
+   desc:"4 cones in a square near a wall. Dribble to each cone, pass from that spot, receive, move to the next.",
+   steps:["4 cones in a square (4 yards apart), wall nearby.","Dribble to cone 1, pass to wall, receive back.","Dribble to cone 2, pass to wall, receive back.","Continue all 4 cones.","Each cone sends the ball to a different wall spot."],
+   challenge:"Add a first-touch direction change after receiving — take it immediately toward the next cone."},
+  {name:"Chip and Settle",time:"5 min",space:"Small",level:"Intermediate",
+   desc:"Practice lofted chip passes. Hit under the ball to lift it, let it arc back high, then settle it.",
+   steps:["Stand 6-8 yards from the wall.","Get slightly under the ball for a chip.","Ball arcs and bounces back high.","Let it bounce once, then settle.","Clean contact at the base of the ball."],
+   challenge:"Chip so it returns at waist height — receive with chest or thigh instead of waiting for the ground!"},
+  {name:"Rondo Wall Fast Passing",time:"2 min",space:"Small",level:"Advanced",
+   desc:"Pass and move as fast as you can. Count total passes in 2 minutes — try to beat your record every round.",
+   steps:["Stand 3-4 yards from the wall.","Pass back and forth as fast as possible.","Move feet slightly between each touch.","Count every pass.","Beat your count next round!"],
+   challenge:"Outside of foot ONLY for every single touch. 2 full minutes — no inside-of-foot!"}
+]},
+{id:"ft-ground",icon:"&#129494;",name:"First Touch (Ground)",accent:"#ff5e5e",
+ tagline:"Take control the moment the ball arrives",
+ tip:"Your first touch should set up your NEXT move. Always take your touch in the direction you want to go — not straight at you!",
+ drills:[
+  {name:"Cushion and Control",time:"5 min",space:"Small",level:"Beginner",
+   desc:"Roll the ball at the wall. When it returns, cushion it — relax your foot back to absorb the energy so it stops softly.",
+   steps:["Roll or kick the ball gently at the wall.","Reach your foot to meet the return.","As it touches your foot, pull slightly back.","Ball stops dead — not bouncing away.","Alternate inside-right and inside-left."],
+   challenge:"Use the OUTSIDE of your foot to cushion. Stop the ball within 6 inches of your feet."},
+  {name:"Directional First Touch",time:"5 min",space:"Small",level:"Intermediate",
+   desc:"Receive from the wall but take your first touch DIAGONALLY into space — not straight back at you.",
+   steps:["Pass to the wall straight ahead.","Angle your foot to redirect the return sideways.","First touch sends the ball 2-3 yards left or right.","Dribble back, pass again, redirect other side.","Ankle locked, direct with intention."],
+   challenge:"Alternate directions every rep — left touch, right touch, left again. Never the same twice!"},
+  {name:"Sole Stop",time:"3 min",space:"Small",level:"Beginner",
+   desc:"Roll the ball toward yourself and stop it completely with the sole of your foot. Zero bounce allowed.",
+   steps:["Roll the ball a few yards away.","Jog toward it.","Place your sole flat on top and press firmly.","Ball stops completely.","Alternate right and left sole."],
+   challenge:"Non-dominant foot only for 2 full minutes."},
+  {name:"Turn with First Touch",time:"5 min",space:"Medium",level:"Intermediate",
+   desc:"Receive from the wall and use your first touch to completely change direction — spinning away from an imaginary defender.",
+   steps:["Face the wall and pass to it.","Angle your body to receive at an angle.","First touch sends the ball BEHIND you and away.","Turn and sprint 4-5 yards.","Jog back, pass again, repeat."],
+   challenge:"Practice the Cruyff turn: fake a pass forward, drag ball behind standing leg with inside of foot, spin away!"},
+  {name:"Pass-Trap-Pass Speed",time:"3 min",space:"Small",level:"Intermediate",
+   desc:"Pass to the wall, trap it, pass again as fast as possible. Count cycles. Speed with control!",
+   steps:["Pass firmly to the wall.","Control the return with a clean first touch.","Immediately pass again.","Count each full cycle.","Beat your count every round."],
+   challenge:"Your trap must place the ball at least 1 yard to the SIDE before you pass again."},
+  {name:"Diagonal Redirect",time:"4 min",space:"Small",level:"Advanced",
+   desc:"Pass to the wall from an angle. Redirect it diagonally across your body and sprint onto it — like switching play.",
+   steps:["Stand 6 yards from the wall at a slight angle.","Pass to the wall.","First touch sends it diagonally across your body.","Sprint after it for 3 yards.","Turn, dribble back, repeat from other angle."],
+   challenge:"Receive without looking — feel it with your foot. Look up and find your target BEFORE the touch."},
+  {name:"Touch Behind Standing Leg",time:"3 min",space:"Small",level:"Advanced",
+   desc:"A deceptive move — receive and take your first touch BEHIND your standing leg to change direction unexpectedly.",
+   steps:["Receive a soft return from the wall.","Inside of left foot touches ball behind your right leg.","Ball goes right while your body appeared to go left.","Explode in the direction the ball went.","Alternate sides each rep."],
+   challenge:"Do it at game speed — jog into the ball, touch, sprint away. Get it fast!"},
+  {name:"Random Roll and React",time:"3 min",space:"Medium",level:"Intermediate",
+   desc:"Kick or throw the ball in unpredictable directions. Sprint to it, first-touch it under control. Simulates game chaos!",
+   steps:["Kick or throw the ball in different directions.","Sprint to it.","First touch brings it completely under control.","Dribble back to start.","Never the same direction twice!"],
+   challenge:"First touch must go the OPPOSITE direction from which you chased. Ran left? Touch it right!"}
+]},
+{id:"ft-air",icon:"&#127783;",name:"First Touch (Air)",accent:"#ffe145",
+ tagline:"Handle the ball when it drops from the sky",
+ tip:"Move under the ball EARLY — don't wait for it. Get in position first, then use a soft surface to cushion it down.",
+ drills:[
+  {name:"Self-Toss and Chest Control",time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"Toss above your chest, puff out to meet it, cushion it softly down to your feet.",
+   steps:["Toss the ball 2-3 feet above your head.","Watch it come down.","Lean slightly back, puff chest out.","As it hits, pull chest in to cushion.","Ball drops straight to your feet."],
+   challenge:"After chest drop, juggle once before catching. Chest, drop, juggle, control!"},
+  {name:"Self-Toss and Thigh Control",time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"Toss up, let it drop to thigh height, and cushion it down. The thigh is a natural soft pillow for the ball.",
+   steps:["Toss above your head.","Watch it fall and step under it.","Raise one thigh and let the ball land on top.","Absorb gently — let it roll to your foot.","Alternate left and right thigh each toss."],
+   challenge:"After the thigh catch, keep it up with thigh juggles — 3 in a row before it hits the ground!"},
+  {name:"Self-Toss and Instep Control",time:"3 min",space:"Tiny",level:"Intermediate",
+   desc:"Toss up and receive on your laces. The foot must be flat like a table — ankle locked, toes pointed down.",
+   steps:["Toss straight up about 2 feet.","Point toes down so laces face UP.","Let the ball land on your laces.","Instantly lower your foot to cushion.","Practice both feet."],
+   challenge:"From the laces catch, immediately pop it up for a juggle. Instep catch, juggle, control!"},
+  {name:"Wall High Ball and Settle",time:"5 min",space:"Small",level:"Intermediate",
+   desc:"Kick the ball HIGH against the wall. As it drops back, receive it cleanly.",
+   steps:["Stand 5-6 yards from the wall.","Kick HIGH up the wall.","Back up and watch it come down.","Choose: chest, thigh, or foot.","Settle before it bounces twice."],
+   challenge:"Receive in one touch, immediately pass back on the second touch. Control plus pass — no extra dribble!"},
+  {name:"Bounce and Kill",time:"3 min",space:"Small",level:"Beginner",
+   desc:"Throw the ball down hard so it bounces high. Kill it dead with your sole as it comes back down.",
+   steps:["Throw the ball down hard for a high bounce.","Watch it rise.","Step forward as it peaks.","Place sole on top to stop it completely.","Stop it within 1 foot of where it landed."],
+   challenge:"One touch only — if it escapes that is a failed rep. Count your successes out of 10!"},
+  {name:"Soft Header Down",time:"3 min",space:"Tiny",level:"Intermediate",
+   desc:"Toss gently upward. Head it SOFTLY so it drops right in front of your feet, then settle it quickly.",
+   steps:["Toss just above your head.","Open your forehead to meet it.","Gently nod it DOWNWARD.","Ball drops in front of your feet.","Settle with one touch."],
+   challenge:"Head it forward a few yards, sprint onto it, and settle it in motion!"},
+  {name:"Drop and Spin React",time:"3 min",space:"Small",level:"Advanced",
+   desc:"Hold the ball behind you, drop it without looking, spin 180 degrees and settle it before two bounces.",
+   steps:["Hold the ball behind your back.","Drop it without looking.","Spin 180 degrees as fast as possible.","Find the ball and settle with first touch.","Alternate spinning left and right."],
+   challenge:"After settling, immediately do a dribble move — react, control, go!"},
+  {name:"Half-Volley Ground Control",time:"3 min",space:"Small",level:"Advanced",
+   desc:"Throw the ball into the ground so it bounces up. Strike it downward as it rises to keep it low along the ground.",
+   steps:["Throw the ball into the ground firmly.","As it rises, strike with laces driving DOWN through the top half.","It should travel low along the ground.","Retrieve and repeat.","Hit the TOP half of the ball to keep it low."],
+   challenge:"Ball must not go above knee height after your strike. Flat ball every time!"}
+]},
+{id:"body-parts",icon:"&#129504;",name:"Body Parts Control",accent:"#ff7eb3",
+ tagline:"Use your whole body to keep the ball alive",
+ tip:"Every part except hands and arms can be used! Learning multiple surfaces gives you WAY more options in a game.",
+ drills:[
+  {name:"Inside-Foot Juggle",time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"Juggle using ONLY the inside of your feet — turn your foot out like ballet and hit with the arch area.",
+   steps:["Turn your foot out like a ballet position.","Use the inside arch to pop the ball up.","Keep the ball at comfortable height.","Both feet equally.","Stick with it — feels awkward at first!"],
+   challenge:"10 in a row inside-of-foot only. Then 20! Track your personal best."},
+  {name:"Thigh Juggle",time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"Juggle using only your thighs. Alternate knees to pop the ball up gently.",
+   steps:["Drop ball onto right thigh from waist height.","Pop it up by lifting your knee.","Switch to left thigh.","Keep alternating: right, left, right, left.","Ball goes about 2 feet high each time."],
+   challenge:"Strictly alternate — RIGHT, LEFT, RIGHT, LEFT — no repeating the same side. 20 alternating touches!"},
+  {name:"Chest and Drop Combo",time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"Toss up, receive on chest, drop to thigh, then to foot. A 3-step receiving chain.",
+   steps:["Toss above your chest.","Cushion with chest — it drops.","Catch on thigh as it falls.","Let it roll to your feet.","Try to complete the whole chain without it hitting the ground."],
+   challenge:"After feet receive it, juggle once before the next toss. Chest, thigh, foot, juggle, repeat!"},
+  {name:"Heading in Place",time:"2 min",space:"Tiny",level:"Beginner",
+   desc:"Toss up and gently head with the forehead — not the top of the head. Head it back up and repeat.",
+   steps:["Toss slightly above your head.","Open your forehead to meet it.","Gentle nod redirects it straight back up.","Toss again when you cannot keep it up.","Eyes OPEN — watch the ball!"],
+   challenge:"5 consecutive headers without catching. Count your record!"},
+  {name:"Laces Juggle",time:"3 min",space:"Tiny",level:"Intermediate",
+   desc:"The classic juggling surface. Laces area, toes pointed down, ankle locked, pop the ball up.",
+   steps:["Drop from waist height.","Point toes down so laces face upward.","Lock your ankle firmly.","Strike the bottom of the ball with laces.","Same height every time — find a rhythm."],
+   challenge:"After 5 laces juggles, close your eyes for the next 3. Feel it, don't watch!"},
+  {name:"Weak-Foot Only Circuit",time:"2 min",space:"Tiny",level:"Intermediate",
+   desc:"For 2 full minutes, every single touch must be with your non-dominant foot. Tough but effective!",
+   steps:["Identify your weak foot.","Start a 2-minute timer.","Dribble, juggle, roll — anything.","ONLY weak foot. Not even one touch with the other.","Rest 1 minute, go again!"],
+   challenge:"Complete a full drill from this list using ONLY your weak foot from start to finish!"},
+  {name:"Outside-of-Foot Roll",time:"3 min",space:"Tiny",level:"Intermediate",
+   desc:"Roll the ball in a figure-8 around both feet using ONLY the outside of each foot.",
+   steps:["Stand shoulder-width apart.","Outside of right foot pushes ball left.","Outside of left foot pushes ball right.","Rolling figure-8 between and around feet.","Smooth and rhythmic."],
+   challenge:"Speed up to max control. Reverse the figure-8 direction every 5 rolls without stopping!"},
+  {name:"Full Body Juggle Circuit",time:"3 min",space:"Tiny",level:"Advanced",
+   desc:"Rotate through ALL surfaces in order: laces, thigh, chest, head. One touch per surface.",
+   steps:["Toss the ball up.","Laces: pop it up.","Thigh: cushion upward.","Chest: redirect higher.","Head: send it back down to start again."],
+   challenge:"No repeats until all surfaces are used. Most complete cycles without dropping = your record!"}
+]},
+{id:"tackling",icon:"&#128737;",name:"Ball Tackling",accent:"#b5f53a",
+ tagline:"Win the ball back with smart feet and brave body",
+ tip:"A great tackle is about TIMING, not strength. Wait for the attacker to push the ball too far — then go!",
+ drills:[
+  {name:"Block Tackle Stance",time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"Learn the correct body position for a standing block tackle before competing for a real ball.",
+   steps:["Feet shoulder-width, slight knee bend.","Step forward and plant the inside of your foot where the ball would be.","Weight forward over your tackling foot.","Standing leg is the anchor — stay balanced.","Practice the motion 10 times each foot."],
+   challenge:"Place a real ball and press your foot against it firmly. Hold for 5 seconds. Feel the stability!"},
+  {name:"Shadow Tackle and Sprint",time:"3 min",space:"Small",level:"Beginner",
+   desc:"Practice the tackle movement WITHOUT a ball. Focus on footwork, body shape, and follow-through.",
+   steps:["Stand facing a cone.","Step toward it in tackle position.","Plant, push through, spring back 3 yards.","Simulates: tackle, recover, defensive shape.","Alternate right and left leading feet."],
+   challenge:"Add a full 5-yard sprint away after every tackle. Winning the ball means nothing without recovery!"},
+  {name:"Poke Tackle Practice",time:"3 min",space:"Small",level:"Beginner",
+   desc:"A quick toe jab knocks the ball away. Great when you cannot get in front of the attacker.",
+   steps:["Dribble slowly across open space.","Stop, reset — you are now the defender.","Jab your toe into the ball sharply.","Ball should fly sideways away.","Sprint to recover it immediately."],
+   challenge:"Poke the ball at a cone gate. Ball must pass between two cones when you poke it. Accuracy plus aggression!"},
+  {name:"Slide Tackle Form Grass Only",time:"5 min",space:"Medium",level:"Intermediate",
+   desc:"Learn the FORM of a slide tackle on soft grass only. Safety first — NEVER on concrete or turf!",
+   steps:["GRASS ONLY. Never on concrete or turf!","Run slowly.","Drop to one knee and extend the other leg forward.","Extended leg leads with inside of foot.","Slide smoothly, get back up quickly!"],
+   challenge:"Slide and knock a placed ball toward a cone target nearby. Accurate AND graceful!"},
+  {name:"Defensive Jockeying",time:"90 sec",space:"Small",level:"Beginner",
+   desc:"Jockeying means staying between the attacker and goal, shuffling your feet to delay. Practice the sideways shuffle.",
+   steps:["Defensive position: low, side-on, one foot forward.","Shuffle sideways 5 yards — don't cross feet.","Shuffle back 5 yards.","Weight on your front foot.","You're slowing the attacker — don't dive in!"],
+   challenge:"Jockey for 45 seconds with hips always below shoulders. Timed!"},
+  {name:"Ball Shield and Burst",time:"3 min",space:"Small",level:"Intermediate",
+   desc:"Shield the ball against the wall with your body between the ball and wall, then explode away.",
+   steps:["Back to the wall, ball at your feet.","Lean in, arms out for balance.","Keep the ball away from the wall.","Hold 5 seconds.","Burst forward — accelerate away!"],
+   challenge:"Extend hold time each rep: 5 sec, 7 sec, 10 sec, 12 sec. Build strength and balance!"},
+  {name:"Tackle and Transition",time:"5 min",space:"Medium",level:"Intermediate",
+   desc:"Sprint toward a cone with a ball, poke it away, then immediately dribble the opposite direction.",
+   steps:["Place ball next to cone, 8 yards away.","Sprint toward it — attack with speed!","Poke or block the ball away from the cone.","Turn and dribble 5 yards opposite direction.","Defending to attacking is the full cycle."],
+   challenge:"After winning the ball, dribble away and add a finishing turn before restarting."},
+  {name:"1v0 Tackle Circuit",time:"5 min",space:"Medium",level:"Advanced",
+   desc:"Set 3 cones in a triangle. Sprint to each performing a different tackle type. Full circuit challenge.",
+   steps:["3 cones in a triangle (5 yards per side).","Sprint to cone 1 — block tackle step.","Sprint to cone 2 — poke tackle.","Sprint to cone 3 — jockey plus burst.","Recover to start and go again!"],
+   challenge:"Time a complete circuit. Record it. Can you get faster while keeping technique clean?"}
+]},
+{id:"shooting",icon:"&#128165;",name:"Shooting",accent:"#ff6b35",
+ tagline:"Strike with power, accuracy, and disguise",
+ tip:"Great shooting starts with your NON-KICKING foot. Plant it beside the ball pointing at your target — your plant foot aims the shot before your kicking foot even swings!",
+ shotSkill:true,
+ drills:[
+  {name:"Plant Foot Power Drive",shotType:"straight",shotLabel:"Straight Shot",
+   time:"5 min",space:"Wall or Open",level:"Beginner",
+   desc:"The driven straight shot is your most powerful and accurate weapon. This drill is 100% about FOOT PLACEMENT — the most forgotten part of shooting.",
+   technique:{title:"Straight Shot Technique",points:[
+    "Plant foot lands BESIDE the ball — not behind it, not too far in front.",
+    "Plant foot toes point directly at your target.",
+    "Kicking foot: ankle LOCKED, toe pointing slightly down.",
+    "Strike through the MIDDLE of the ball with your laces.",
+    "Follow through — kicking foot swings all the way up toward the target.",
+    "Keep your body slightly over the ball — lean too far back and it goes high!"
+   ]},
+   steps:["Place a stationary ball near a wall or open fence.","Take 2 slow steps back and one step to the side.","Step toward the ball — last step is your PLANT FOOT landing beside it.","Swing through with locked ankle, laces contact.","Kicking leg follows all the way through."],
+   challenge:"Tape targets on the wall — aim for LOW corners specifically. 10 shots, count hits. Repeat!"},
+  {name:"Strike and Self-Check",shotType:"straight",shotLabel:"Straight Shot",
+   time:"5 min",space:"Wall or Open",level:"Beginner",
+   desc:"After every single shot, freeze in your follow-through and check your body position. Self-coaching your technique is a superpower.",
+   technique:{title:"Self-Check Checklist",points:[
+    "Is your kicking foot pointed forward in the follow-through?",
+    "Did your body stay over the ball — not leaning back?",
+    "Plant foot: was it beside, not behind?",
+    "Did you look at your target BEFORE striking?",
+    "Was your ankle LOCKED throughout the whole swing?"
+   ]},
+   steps:["Set up a shot on a stationary ball.","Shoot at the wall or a target.","FREEZE the moment you finish the follow-through.","Run through the checklist mentally.","Correct anything wrong BEFORE your next rep."],
+   challenge:"Have someone film you — watch slow-mo. Compare your foot, hip, and body angle to the checklist!"},
+  {name:"Touch and Shoot",shotType:"straight",shotLabel:"Straight Shot",
+   time:"7 min",space:"Medium",level:"Intermediate",
+   desc:"Dribble in, take a SETTING touch, then shoot. Most real game shots come off a touch — not a standing ball.",
+   technique:{title:"The Setting Touch",points:[
+    "The setting touch puts the ball in the perfect spot — about half a yard ahead, slightly to your kicking side.",
+    "Too far forward means you overreach. Too close means your plant foot has no room.",
+    "The touch should leave the ball rolling slowly — nearly still as you strike.",
+    "Your plant foot should naturally land just as the ball stops moving."
+   ]},
+   steps:["Start 10 yards from your target.","Dribble toward it at a jog.","At 4-5 yards out, take a single forward touch.","Let the ball roll half a yard ahead.","Time your stride and shoot through the ball."],
+   challenge:"Receive a wall bounce first, THEN take the setting touch and shoot. Control, touch, shoot — one smooth movement!"},
+  {name:"Knuckleball Standing Strike",shotType:"knuckle",shotLabel:"Knuckleball",
+   time:"7 min",space:"Wall or Open",level:"Intermediate",
+   desc:"The knuckleball has ZERO spin — the ball wobbles unpredictably in flight, making it incredibly hard for keepers to handle. It looks like a normal drive but behaves completely differently!",
+   technique:{title:"Knuckleball Technique",points:[
+    "Strike the DEAD CENTER of the ball — perfectly through the middle.",
+    "Contact point: the knuckle-ridge where your big toe meets your foot — the very base of your laces toward the big toe side.",
+    "Ankle is firm but DON'T wrap your foot around the ball.",
+    "Hit THROUGH it cleanly then pull back slightly — less follow-through than a normal drive.",
+    "The ball should leave with little or NO spin at all.",
+    "Plant foot slightly further from the ball than usual — creates a more upright striking position.",
+    "Watch for the wobble in flight — that is the sign you nailed it!"
+   ]},
+   steps:["Place a stationary ball.","Stand more upright than for a normal shot.","Plant foot slightly further back than usual.","Strike the very CENTER with the knuckle-ridge.","After contact, limit follow-through — push through and stop.","Watch the ball wobble side to side in flight!"],
+   challenge:"5 yards from the wall, fire 10 knuckleballs. Count how many wobble visibly. More wobble means better contact! Move back as you improve."},
+  {name:"Knuckleball Runway",shotType:"knuckle",shotLabel:"Knuckleball",
+   time:"7 min",space:"Large",level:"Intermediate",
+   desc:"A knuckleball from a run-up is more powerful and even trickier to master. The approach angle and last stride are critical.",
+   technique:{title:"Knuckleball Run-Up Keys",points:[
+    "Approach from STRAIGHT BEHIND the ball — a direct run-up, not angled like a regular shot.",
+    "Last stride is short and balanced — plant right beside the ball.",
+    "Strike dead center with the knuckle-ridge as usual.",
+    "The straighter the approach, the easier it is to hit through the true center.",
+    "Think of it as a firm controlled punch through the ball rather than a full swing."
+   ]},
+   steps:["Set a stationary ball with 6-8 yards of run-up behind it.","Approach STRAIGHT — not angled.","Last step: plant beside the ball.","Strike dead center with firm knuckle-ridge.","Watch the flight — no spin, lots of wobble or dip!"],
+   challenge:"Move back to 10-12 yards. At distance the wobble becomes extreme. Hit a wall target from 12 yards using ONLY knuckleballs!"},
+  {name:"Drop-Shot Topspin Strike",shotType:"drop",shotLabel:"Drop-Shot",
+   time:"7 min",space:"Wall or Open",level:"Advanced",
+   desc:"A drop-shot is hit with TOPSPIN — the ball rises then suddenly dips sharply downward. Hit it over a keeper and it dips under the bar. This is advanced technique!",
+   technique:{title:"Drop-Shot Technique",points:[
+    "Contact point: strike the TOP-HALF of the ball — slightly above the horizontal center line.",
+    "Your foot sweeps DOWN through the ball on contact, creating forward rotation (topspin).",
+    "The swing is more like a chopping motion than a pure follow-through drive.",
+    "Keep the ball low initially — the topspin will dip it further.",
+    "Ankle still locked but foot angle tilts forward so toes are lower than a normal drive.",
+    "More spin equals more dip. It takes real practice to feel the difference!"
+   ]},
+   steps:["Place a stationary ball.","Approach from a slightly wider angle than normal.","Plant foot beside the ball as usual.","Swing so you contact the TOP-HALF of the ball.","Feel your foot sweeping DOWNWARD through the contact point.","Watch the ball — it should rise then DROP sharply!"],
+   challenge:"Set up a string or tape line at 5 feet high between two chairs. Shoot OVER the line from 5 yards but make it land within 3 yards past it. The dip equals success!"},
+  {name:"Drop-Shot from a Bounce",shotType:"drop",shotLabel:"Drop-Shot",
+   time:"7 min",space:"Small",level:"Advanced",
+   desc:"A bouncing ball is a perfect setup for a drop-shot — striking just after the bounce with topspin sends it dipping and low. A surprise weapon in a game.",
+   technique:{title:"Timing the Bounce",points:[
+    "Strike the ball just AFTER it peaks off a bounce — on the way DOWN.",
+    "This timing naturally helps you get your foot over the top half of the ball.",
+    "The ball was already coming down so your topspin adds extra dip.",
+    "This is often easier to learn than a standing drop-shot because the ball's motion guides your foot."
+   ]},
+   steps:["Kick the ball against the wall so it bounces back toward you.","Let it bounce once.","As it comes DOWN off the peak of the bounce, step into it.","Strike the top-half with your laces.","Follow through in a sweeping downward motion.","Ball should stay low and dip quickly!"],
+   challenge:"Aim for the bottom third of the wall. Your shot must bounce within 2 yards of leaving your foot — ultra-dipping, low drives!"},
+  {name:"Shot Type Circuit",shotType:"combo",shotLabel:"All Three Types",
+   time:"10 min",space:"Open",level:"Advanced",
+   desc:"The ultimate shooting challenge — rotate through all three shot types. This is the closest you can get to real game shooting alone: decide and execute on the fly.",
+   technique:{title:"Decision Shooting Keys",points:[
+    "Shot 1 Straight Drive: max power, contact through center, full follow-through.",
+    "Shot 2 Knuckleball: dead center contact, limited follow-through, watch for wobble.",
+    "Shot 3 Drop-Shot: top-half contact, downward sweep, watch for the dip.",
+    "Make each shot look IDENTICAL in your approach — the difference is only in contact point and follow-through.",
+    "Disguise is the real skill: a keeper who cannot tell which shot is coming is in big trouble!"
+   ]},
+   steps:["Set up 3 balls in a line, 5 yards from target.","Ball 1: straight power drive.","Ball 2: knuckleball — dead center, limited follow-through.","Ball 3: drop-shot — top-half, downward sweep.","Rest 30 seconds. Repeat for 3 full rounds."],
+   challenge:"Close your eyes between shots. Open them, approach the ball, decide the shot type in the last 2 steps only — react and fire! Build truly instinctive technique."}
+]},
+{id:"feints",icon:"&#129337;",name:"Feints and Moves",accent:"#ffe145",
+ tagline:"Master fakes, dodges, and on-ball moves — no ball first!",
+ tip:"The secret to every great move is BODY DECEPTION — you fool a defender with your body BEFORE your feet do anything special. Practice without the ball first so your body learns the movement pattern. Then add the ball.",
+ feintSkill:true,
+ drills:[
+  {name:"Step-Over Footwork — No Ball",
+   phase:"nobll",phaseLabel:"Phase 1: No Ball",
+   time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"Learn the step-over leg movement WITHOUT the ball first. Stand in place and practice the exact foot path so your legs build the muscle memory before a ball is ever involved.",
+   steps:["Stand in place, feet shoulder-width.","Swing your right foot in a wide arc over where the ball WOULD be — outside to inside.","Your right foot lands to the left of where it started.","Quickly shift your weight and push off to the RIGHT with your left foot.","Repeat the swing motion 10 times, then switch feet."],
+   challenge:"Speed up your no-ball step-overs until they feel lightning fast. Count how many you can do in 30 seconds!"},
+  {name:"Step-Over — Add the Ball",
+   phase:"ball",phaseLabel:"Phase 2: Add the Ball",
+   time:"5 min",space:"Small",level:"Beginner",
+   desc:"Now add the ball on the ground. Start stationary — do the step-over motion exactly as you practiced, then push the ball the opposite direction and accelerate.",
+   steps:["Place the ball in front of you, standing still.","Do the right-foot step-over arc over the ball (outside to inside).","Immediately push the ball to the RIGHT with the outside of your left foot.","Accelerate 3-4 yards in that direction.","Walk back, reset, repeat. Do 10 reps each direction."],
+   challenge:"Do a DOUBLE step-over — two arcs before pushing the ball. Both step-overs must be convincing and tight!"},
+  {name:"4-Cone Step-Over Circuit",
+   phase:"adv",phaseLabel:"Phase 3: Full Circuit",
+   time:"7 min",space:"Medium",level:"Intermediate",
+   desc:"Set up 4 cones in a line like the image — about 1 yard apart. Dribble to each cone and do a step-over fake at each one before continuing to the next. This is exactly the drill in the photo!",
+   steps:["Set 4 disc cones in a straight line, 1 yard apart.","Start at one end, dribble slowly to cone 1.","At cone 1, do one step-over fake, then dribble on to cone 2.","At cone 2, step-over fake, dribble to cone 3.","Continue through all 4 cones, turn around, come back."],
+   challenge:"Go through the 4 cones without stopping — continuous motion. The step-overs should happen without breaking your stride. Smooth and convincing!"},
+  {name:"Body Feint Footwork — No Ball",
+   phase:"nobll",phaseLabel:"Phase 1: No Ball",
+   time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"A body feint uses your shoulders and hips to fake a direction change. Practice the body lean and weight shift completely without a ball first.",
+   steps:["Stand in place, feet shoulder-width.","Dip your LEFT shoulder down and lean your whole body hard to the left — like you're about to sprint that way.","Pause for half a second holding the lean.","Then explosively push off your LEFT foot and go RIGHT.","The lean is the fake. The push is the real direction. Practice 10 reps each side."],
+   challenge:"In front of a mirror, check that your shoulder drop is convincing — if YOU believe the fake, a defender will too!"},
+  {name:"Body Feint — Add the Ball",
+   phase:"ball",phaseLabel:"Phase 2: Add the Ball",
+   time:"5 min",space:"Small",level:"Intermediate",
+   desc:"Now add the ball and a cone defender. Dribble toward the cone, do a shoulder feint, then burst away in the real direction.",
+   steps:["Place one cone 6 yards ahead — it's your defender.","Dribble slowly toward it.","3 yards from the cone, dip your shoulder hard to the left.","Push off your left foot and accelerate to the RIGHT.","Keep the ball close on the acceleration."],
+   challenge:"Add a 10-yard sprint after the feint. The acceleration after the fake is just as important as the fake itself — you must COMMIT to it!"},
+  {name:"Pull-Back Turn Footwork — No Ball",
+   phase:"nobll",phaseLabel:"Phase 1: No Ball",
+   time:"3 min",space:"Tiny",level:"Beginner",
+   desc:"The pull-back turn is one of the most useful moves to escape a closing defender. Learn the foot movement and pivot without the ball first.",
+   steps:["Jog forward slowly.","Plant your right foot firmly — like you're stopping.","Swing your left foot around 180 degrees, pivoting on your right.","You are now facing the opposite direction.","Practice the pivot until it feels smooth and natural — 10 reps each pivot foot."],
+   challenge:"Jog faster before the pivot. The pull-back is most useful at medium speed — build up to doing it at a jogging pace!"},
+  {name:"Pull-Back Turn — Add the Ball",
+   phase:"ball",phaseLabel:"Phase 2: Add the Ball",
+   time:"5 min",space:"Small",level:"Intermediate",
+   desc:"Now add the ball. Dribble toward a cone, use the sole to drag the ball backward as you pivot, and sprint back the way you came.",
+   steps:["Dribble toward a cone 8 yards away.","When you reach the cone, place your sole on top of the ball.","Drag it back toward you while pivoting 180 degrees on your other foot.","The ball rolls back behind you.","Sprint away from the cone in the new direction."],
+   challenge:"Do the pull-back WITHOUT slowing down before the cone — maintain speed going in, drag, and immediately accelerate out. No hesitation!"},
+  {name:"Cruyff Turn — No Ball",
+   phase:"nobll",phaseLabel:"Phase 1: No Ball",
+   time:"3 min",space:"Tiny",level:"Intermediate",
+   desc:"The Cruyff Turn is one of the most iconic moves in soccer. Learn the exact foot position and body pivot without a ball so your legs know the motion before adding the ball.",
+   steps:["Stand in place, right foot forward.","Swing your right leg forward like you're about to pass or shoot.","Instead of following through, plant that foot and swing it BEHIND your left standing leg.","Your right foot lands behind and to the left.","Pivot on your left foot and face the new direction. Practice 10 reps each side."],
+   challenge:"Do the Cruyff motion continuously — left side, right side, left side — non-stop for 30 seconds. Build the reflex!"},
+  {name:"Cruyff Turn — Add the Ball",
+   phase:"ball",phaseLabel:"Phase 2: Add the Ball",
+   time:"5 min",space:"Small",level:"Intermediate",
+   desc:"Now add the ball with a cone as the defender. Fake a pass or shot, drag the ball behind your standing leg with the inside of your foot, pivot, and accelerate away.",
+   steps:["Place a cone 5 yards ahead.","Dribble toward it slowly.","Fake a pass or shot with your right foot — swing it forward convincingly.","Instead of following through, hook the ball BEHIND your left standing leg with the inside of your right foot.","Pivot and sprint the opposite direction."],
+   challenge:"Make the fake so convincing that even YOU believe it for a split second. Film yourself — does the body language sell it?"},
+  {name:"4-Cone Move Circuit — Mixed",
+   phase:"adv",phaseLabel:"Phase 3: Full Circuit",
+   time:"10 min",space:"Medium",level:"Advanced",
+   desc:"Set up 4 cones in a line exactly like the image. At each cone, do a DIFFERENT move. This forces your body to switch between techniques on the fly — exactly like a real game.",
+   steps:["Set 4 disc cones in a line, 1 yard apart.","Dribble to cone 1: Step-Over fake.","Dribble to cone 2: Body Feint.","Dribble to cone 3: Pull-Back Turn.","Dribble to cone 4: Cruyff Turn. Turn around and come back using a different set of moves!"],
+   challenge:"Time your full circuit. Can you do all 4 moves cleanly AND get faster each round? The goal is smooth, convincing fakes at speed — not just speed alone!"}
+]}
+];
+
+var activeId=null;
+var opened={};
+var total=skills.reduce(function(s,sk){return s+sk.drills.length;},0);
+
+function stHtml(d){
+  if(!d.shotType)return '';
+  var m={straight:'st-straight',knuckle:'st-knuckle',drop:'st-drop',combo:'st-combo'};
+  return '<span class="st '+(m[d.shotType]||'')+'" style="display:inline-block;margin-bottom:11px">'+d.shotLabel+'</span>';
+}
+function phHtml(d){
+  if(!d.phase)return '';
+  var m={nobll:'ph-nobll',ball:'ph-ball',adv:'ph-adv'};
+  return '<span class="phase-badge '+(m[d.phase]||'')+'" style="display:inline-block;margin-bottom:11px">'+d.phaseLabel+'</span>';
+}
+
+function renderCards(){
+  var h='';
+  for(var i=0;i<skills.length;i++){
+    var s=skills[i];
+    h+='<div class="scard" id="c-'+s.id+'" style="--accent:'+s.accent+'" onclick="open_(\''+s.id+'\')">';
+    h+='<span class="scard-icon">'+s.icon+'</span>';
+    h+='<h3>'+s.name+'</h3>';
+    h+='<p>'+s.tagline+'</p>';
+    h+='<span class="dcnt">'+s.drills.length+' drills</span>';
+    h+='</div>';
+  }
+  document.getElementById('grid').innerHTML=h;
+}
+
+function open_(id){
+  var sk=null;
+  for(var i=0;i<skills.length;i++){if(skills[i].id===id){sk=skills[i];break;}}
+  if(!sk)return;
+  if(activeId===id){closePanel();return;}
+  activeId=id;
+  var cs=document.querySelectorAll('.scard');
+  for(var c=0;c<cs.length;c++)cs[c].classList.remove('active');
+  document.getElementById('c-'+id).classList.add('active');
+
+  var extra='';
+  if(sk.shotSkill){
+    extra='<div class="slegend"><span class="sl-lbl">Shot Types:</span>'
+      +'<span class="st st-straight">Straight Shot</span>'
+      +'<span class="st st-knuckle">Knuckleball</span>'
+      +'<span class="st st-drop">Drop-Shot</span>'
+      +'<span class="st st-combo">All Three</span></div>';
+  }
+  if(sk.feintSkill){
+    extra='<div class="plegend"><span class="sl-lbl">Learning Phases:</span>'
+      +'<span class="phase-badge ph-nobll">Phase 1: No Ball</span>'
+      +'<span class="phase-badge ph-ball">Phase 2: Add the Ball</span>'
+      +'<span class="phase-badge ph-adv">Phase 3: Full Circuit</span></div>';
+  }
+
+  var dh='';
+  for(var j=0;j<sk.drills.length;j++)dh+=renderDrill(sk.drills[j],j,sk.id,sk.accent);
+
+  var pan=document.getElementById('panel');
+  pan.innerHTML='<div style="--pa:'+sk.accent+'">'
+    +'<div class="ph"><span class="ph-icon">'+sk.icon+'</span>'
+    +'<div class="ph-text"><h2>'+sk.name+'</h2><p>'+sk.tagline+' &middot; '+sk.drills.length+' drills</p></div></div>'
+    +'<div class="ptip">'+sk.tip+'</div>'
+    +extra
+    +'<div class="dlist">'+dh+'</div>'
+    +'<button class="close-btn" onclick="closePanel()">Close '+sk.name+'</button>'
+    +'</div>';
+  pan.classList.add('on');
+  setTimeout(function(){pan.scrollIntoView({behavior:'smooth',block:'start'});},60);
+}
+
+function renderDrill(d,idx,sid,acc){
+  var tech='';
+  if(d.technique){
+    var pts='';
+    for(var k=0;k<d.technique.points.length;k++)
+      pts+='<li><span class="tarr">&#8594;</span><span>'+d.technique.points[k]+'</span></li>';
+    tech='<div class="tbox"><div class="tbox-title">'+d.technique.title+'</div><ul class="tpts">'+pts+'</ul></div>';
+  }
+  var steps='';
+  for(var s=0;s<d.steps.length;s++)
+    steps+='<li><span class="sdot">'+(s+1)+'</span><span>'+d.steps[s]+'</span></li>';
+  var key=sid+'-'+idx;
+  return '<div class="di" id="d-'+key+'" style="--pa:'+acc+'">'
+    +'<div class="dh" onclick="tog(\''+key+'\')">'
+    +'<span class="dnum">'+(idx+1)+'</span>'
+    +'<div class="dnw"><div class="dname">'+d.name+'</div>'
+    +'<div class="dmeta">'
+    +'<span class="pill pt">&#9201; '+d.time+'</span>'
+    +'<span class="pill ps">&#128205; '+d.space+'</span>'
+    +'<span class="pill pl">&#11088; '+d.level+'</span>'
+    +'</div></div>'
+    +'<span class="dchev">&#9660;</span></div>'
+    +'<div class="db">'
+    +stHtml(d)+phHtml(d)
+    +'<p class="ddesc">'+d.desc+'</p>'
+    +tech
+    +'<div class="howto">How to Do It</div>'
+    +'<ul class="steps">'+steps+'</ul>'
+    +'<div class="cbox"><span class="cico">&#128293;</span>'
+    +'<div class="ctxt"><strong>Make It Harder!</strong>'+d.challenge+'</div>'
+    +'</div></div></div>';
+}
+
+function tog(key){
+  var el=document.getElementById('d-'+key);
+  var was=el.classList.contains('open');
+  el.classList.toggle('open');
+  if(!was){opened[key]=true;updateProg();}
+}
+function closePanel(){
+  activeId=null;
+  var cs=document.querySelectorAll('.scard');
+  for(var c=0;c<cs.length;c++)cs[c].classList.remove('active');
+  var pan=document.getElementById('panel');
+  pan.classList.remove('on');
+  pan.innerHTML='';
+}
+function updateProg(){
+  var cnt=Object.keys(opened).length;
+  var pw=document.getElementById('pw');
+  var pf=document.getElementById('pf');
+  var pp=document.getElementById('pp');
+  pw.style.display='flex';
+  var pct=Math.round((cnt/total)*100);
+  pf.style.width=pct+'%';
+  pp.textContent=pct+'%';
+}
+renderCards();
+</script>
+</body>
+</html>
